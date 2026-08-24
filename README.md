@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vrushahi Foundation
 
-## Getting Started
+Public site + admin panel for Vrushahi Foundation, built with Next.js (App
+Router), Tailwind CSS, and MongoDB.
 
-First, run the development server:
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Requires a `.env.local` file (see `.env.example` for the full list):
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- `MONGODB_URI` — a MongoDB connection string (MongoDB Atlas free tier works well)
+- `ADMIN_EMAIL` — the email used to log in at `/admin/login`
+- `ADMIN_PASSWORD_HASH` — a bcrypt hash, generated with:
+  ```bash
+  node scripts/hash-password.js "your-chosen-password"
+  ```
+- `SESSION_SECRET` — a random 32+ byte secret signing admin session tokens:
+  ```bash
+  openssl rand -base64 32
+  ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Gotcha:** bcrypt hashes contain literal `$` characters, and Next.js's
+`.env` file loader treats `$VAR` as variable expansion. `scripts/hash-password.js`
+already escapes this for you (`\$` instead of `$`) when writing to
+`.env.local` — don't hand-edit `ADMIN_PASSWORD_HASH` without escaping `$` the
+same way, or login will silently fail. This only applies to `.env*` files;
+values set directly in Vercel's dashboard/CLI do **not** need escaping.
 
-## Learn More
+## Deploying to Vercel
 
-To learn more about Next.js, take a look at the following resources:
+This repo is already linked to a Vercel project (`vrushahi-foundation`), and
+the four env vars above are already set for the Production environment —
+deploy with:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+vercel --prod
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+or connect the GitHub repo in the Vercel dashboard for git-based deploys.
 
-## Deploy on Vercel
+**Before your first real deploy, check MongoDB Atlas Network Access.**
+Vercel's serverless functions don't have a fixed IP, so the Atlas cluster's
+Network Access list needs to allow connections from anywhere
+(`0.0.0.0/0`) unless you're on an Atlas tier with a static outbound IP
+add-on. Without this, the site will build fine but every database call in
+production will fail.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Nothing else in this codebase is Vercel-specific — no filesystem writes, no
+native build steps beyond what Next.js/Vercel already handle, and `proxy.js`
+(Next 16's replacement for `middleware.js`) runs on Vercel with no extra
+config.
