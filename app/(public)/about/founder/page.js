@@ -33,8 +33,8 @@ export default function FounderPage() {
 
       <section className="py-20 sm:py-24">
         <Container className="max-w-3xl">
-          <Reveal className="flex flex-col items-start gap-6 rounded-2xl border border-line bg-surface p-8 sm:flex-row sm:items-center">
-            <span className="flex size-24 shrink-0 items-center justify-center rounded-full bg-forest text-3xl font-medium text-paper">
+          <Reveal className="group flex flex-col items-start gap-6 rounded-2xl border border-line bg-surface p-8 transition-all duration-300 hover:border-forest/30 hover:shadow-soft sm:flex-row sm:items-center">
+            <span className="flex size-24 shrink-0 items-center justify-center rounded-full bg-forest text-3xl font-medium text-paper transition-transform duration-500 group-hover:-rotate-3 group-hover:scale-105">
               SD
             </span>
             <div>

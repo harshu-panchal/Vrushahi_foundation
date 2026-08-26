@@ -10,8 +10,12 @@ export default function CtaBand({
   secondary = { href: "/volunteer", label: "Volunteer With Us" },
 }) {
   return (
-    <section className="bg-terracotta">
-      <Container className="py-16 text-center">
+    <section className="relative overflow-hidden bg-terracotta">
+      <div
+        aria-hidden="true"
+        className="animate-float pointer-events-none absolute left-1/2 top-1/2 h-[36rem] w-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-marigold/10 blur-3xl"
+      />
+      <Container className="relative py-16 text-center">
         <Reveal>
           <h2 className="mx-auto max-w-2xl text-balance font-display text-3xl font-medium text-paper sm:text-4xl">
             {title}
@@ -22,14 +26,17 @@ export default function CtaBand({
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
               href={primary.href}
-              className="inline-flex items-center gap-2 rounded-full bg-paper px-6 py-3 text-sm font-semibold text-terracotta-dark transition-transform hover:scale-[1.03]"
+              className="btn-shine group inline-flex items-center gap-2 rounded-full bg-paper px-6 py-3 text-sm font-semibold text-terracotta-dark transition-all duration-300 hover:scale-[1.05] hover:shadow-lift"
             >
               {primary.label}
-              <Icon name="ArrowUpRight" className="size-4" />
+              <Icon
+                name="ArrowUpRight"
+                className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
             </Link>
             <Link
               href={secondary.href}
-              className="inline-flex items-center gap-2 rounded-full border border-paper/70 px-6 py-3 text-sm font-semibold text-paper transition-colors hover:bg-paper/10"
+              className="inline-flex items-center gap-2 rounded-full border border-paper/70 px-6 py-3 text-sm font-semibold text-paper transition-all duration-300 hover:scale-[1.05] hover:border-paper hover:bg-paper/10"
             >
               {secondary.label}
             </Link>

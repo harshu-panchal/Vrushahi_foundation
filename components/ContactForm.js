@@ -5,7 +5,7 @@ import { site } from "@/data/site";
 import Icon from "./Icon";
 
 const fieldClass =
-  "w-full rounded-xl border border-line bg-paper px-4 py-3 text-sm text-ink placeholder:text-ink-faint focus:border-terracotta focus:outline-none focus:ring-2 focus:ring-terracotta/20";
+  "w-full rounded-xl border border-line bg-paper px-4 py-3 text-sm text-ink placeholder:text-ink-faint transition-all duration-200 focus:border-terracotta focus:outline-none focus:ring-2 focus:ring-terracotta/20";
 
 export default function ContactForm({
   subjectPrefix = "Message from vrushahifoundation.org",
@@ -57,7 +57,25 @@ export default function ContactForm({
 
   if (endpoint && status === "success") {
     return (
-      <div className="rounded-xl border border-line bg-surface p-6 text-center">
+      <div className="animate-reveal-in rounded-xl border border-line bg-surface p-6 text-center">
+        <span className="mx-auto mb-3 flex size-11 items-center justify-center rounded-full bg-forest-light text-forest">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            className="size-5"
+            aria-hidden="true"
+          >
+            <path
+              d="M5 13l4 4L19 7"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="animate-draw-check"
+              pathLength="1"
+            />
+          </svg>
+        </span>
         <p className="font-medium text-ink">Thank you — we&apos;ve received it.</p>
         <p className="mt-1 text-sm text-ink-soft">
           We&apos;ll get back to you soon.
@@ -135,14 +153,38 @@ export default function ContactForm({
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="inline-flex items-center gap-2 rounded-full bg-terracotta px-6 py-3 text-sm font-semibold text-paper transition-colors hover:bg-terracotta-dark disabled:opacity-60"
+        className="btn-shine inline-flex items-center gap-2 rounded-full bg-terracotta px-6 py-3 text-sm font-semibold text-paper transition-all duration-300 hover:enabled:scale-[1.03] hover:enabled:bg-terracotta-dark disabled:opacity-70"
       >
+        {status === "submitting" ? (
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            className="size-4 animate-spin"
+            aria-hidden="true"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeOpacity="0.3"
+            />
+            <path
+              d="M21 12a9 9 0 0 0-9-9"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            />
+          </svg>
+        ) : (
+          <Icon name="ArrowRight" className="size-4" />
+        )}
         {status === "submitting" ? "Sending…" : submitLabel}
-        <Icon name="ArrowRight" className="size-4" />
       </button>
       {endpoint ? (
         status === "error" && (
-          <p className="text-xs font-medium text-terracotta-dark">
+          <p className="animate-reveal-in text-xs font-medium text-terracotta-dark">
             {errorMessage}
           </p>
         )

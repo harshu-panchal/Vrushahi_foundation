@@ -47,9 +47,9 @@ export default function ContactPage() {
               <Reveal
                 key={detail.label}
                 delay={i * 0.06}
-                className="flex items-start gap-4 rounded-2xl border border-line bg-surface p-6"
+                className="group flex items-start gap-4 rounded-2xl border border-line bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-terracotta/30 hover:shadow-soft"
               >
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-terracotta-light text-terracotta-dark">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-terracotta-light text-terracotta-dark transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110">
                   <Icon name={detail.icon} className="size-5" />
                 </span>
                 <div>
@@ -61,7 +61,7 @@ export default function ContactPage() {
                       <a
                         key={line}
                         href={detail.hrefs[j]}
-                        className="block text-lg font-medium text-ink hover:text-terracotta"
+                        className="link-underline block text-lg font-medium text-ink transition-colors hover:text-terracotta"
                       >
                         {line}
                       </a>

@@ -40,9 +40,9 @@ export default function TrusteesPage() {
               <Reveal
                 key={`${role}-${i}`}
                 delay={i * 0.06}
-                className="rounded-2xl border border-dashed border-line bg-surface p-6 text-center"
+                className="group rounded-2xl border border-dashed border-line bg-surface p-6 text-center transition-all duration-300 hover:border-terracotta/40 hover:bg-paper"
               >
-                <span className="mx-auto flex size-16 items-center justify-center rounded-full bg-paper text-ink-faint">
+                <span className="mx-auto flex size-16 items-center justify-center rounded-full bg-paper text-ink-faint transition-transform duration-300 group-hover:scale-110 group-hover:text-terracotta">
                   <Icon name="Users" className="size-6" />
                 </span>
                 <p className="mt-4 text-sm font-semibold uppercase tracking-wide text-terracotta">
@@ -55,7 +55,7 @@ export default function TrusteesPage() {
           <Reveal delay={0.3} className="mt-10 max-w-2xl text-sm text-ink-faint">
             We&apos;re updating this page with the current Board&apos;s names,
             designations and photographs. Reach out via our{" "}
-            <a href="/contact" className="font-semibold text-terracotta">
+            <a href="/contact" className="link-underline font-semibold text-terracotta">
               contact page
             </a>{" "}
             if you need trustee details sooner.

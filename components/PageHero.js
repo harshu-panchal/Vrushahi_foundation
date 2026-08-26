@@ -2,8 +2,12 @@ import Container from "./Container";
 
 export default function PageHero({ eyebrow, title, description }) {
   return (
-    <section className="border-b border-line bg-surface">
-      <Container className="py-16 sm:py-20">
+    <section className="relative overflow-hidden border-b border-line bg-surface">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-marigold/10 blur-3xl"
+      />
+      <Container className="relative animate-hero-in py-16 sm:py-20">
         {eyebrow && (
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.14em] text-terracotta">
             {eyebrow}

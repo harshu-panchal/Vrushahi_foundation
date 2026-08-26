@@ -25,8 +25,8 @@ export const site = {
 };
 
 export const impactStats = [
-  { value: "25", label: "Senior citizens supported daily", suffix: "" },
-  { value: "300", label: "Children cared for at our partner children's home", suffix: "" },
-  { value: "100", label: "Families aided after the Jammu & Kashmir calamity", suffix: "" },
-  { value: "2017", label: "Registered as a society in Maharashtra", suffix: "" },
+  { value: "25", label: "Senior citizens supported daily", icon: "HandHeart" },
+  { value: "300", label: "Children cared for at our partner children's home", icon: "Home" },
+  { value: "100", label: "Families aided after the Jammu & Kashmir calamity", icon: "LifeBuoy" },
+  { value: "2017", label: "Registered as a society in Maharashtra", icon: "ShieldCheck" },
 ];

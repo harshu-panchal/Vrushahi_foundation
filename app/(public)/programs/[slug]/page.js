@@ -6,6 +6,7 @@ import Reveal from "@/components/Reveal";
 import Icon from "@/components/Icon";
 import CtaBand from "@/components/CtaBand";
 import ProgramCard from "@/components/ProgramCard";
+import CountUp from "@/components/CountUp";
 import { programs, getProgramBySlug } from "@/data/programs";
 
 export function generateStaticParams() {
@@ -36,9 +37,12 @@ export default async function ProgramPage({ params }) {
           <Reveal>
             <Link
               href="/programs"
-              className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-ink-soft hover:text-terracotta"
+              className="group/back mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-ink-soft transition-colors hover:text-terracotta"
             >
-              &larr; All programs
+              <span className="inline-block transition-transform duration-300 group-hover/back:-translate-x-1">
+                &larr;
+              </span>
+              All programs
             </Link>
             <span className="mb-5 inline-flex size-12 items-center justify-center rounded-full bg-terracotta-light text-terracotta-dark">
               <Icon name={program.icon} className="size-6" />
@@ -50,19 +54,19 @@ export default async function ProgramPage({ params }) {
               {program.short}
             </p>
             <div className="mt-8 inline-flex items-baseline gap-2 rounded-2xl border border-line bg-paper px-5 py-4">
-              <span className="font-display text-3xl font-medium text-terracotta">
-                {program.stat.value}
+              <span className="font-display text-3xl font-medium tabular-nums text-terracotta">
+                <CountUp value={program.stat.value} />
               </span>
               <span className="text-sm text-ink-soft">{program.stat.label}</span>
             </div>
           </Reveal>
-          <Reveal delay={0.12} className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-line shadow-lift">
+          <Reveal delay={0.12} className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-line shadow-lift">
             <Image
               src={program.image}
               alt={program.imageAlt}
               fill
               sizes="(min-width: 1024px) 560px, 100vw"
-              className="object-cover"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               priority
             />
           </Reveal>

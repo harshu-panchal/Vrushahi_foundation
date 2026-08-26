@@ -52,9 +52,9 @@ export default function DonatePage() {
                 <Reveal
                   key={way.title}
                   delay={i * 0.06}
-                  className="rounded-2xl border border-line bg-surface p-6"
+                  className="group rounded-2xl border border-line bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-terracotta/30 hover:shadow-soft"
                 >
-                  <span className="mb-4 inline-flex size-10 items-center justify-center rounded-full bg-terracotta-light text-terracotta-dark">
+                  <span className="mb-4 inline-flex size-10 items-center justify-center rounded-full bg-terracotta-light text-terracotta-dark transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110">
                     <Icon name={way.icon} className="size-5" />
                   </span>
                   <h3 className="font-medium text-ink">{way.title}</h3>
@@ -64,14 +64,14 @@ export default function DonatePage() {
             </div>
           </div>
 
-          <Reveal delay={0.1} className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-line shadow-soft">
+          <Reveal delay={0.1} className="group relative aspect-[4/5] overflow-hidden rounded-2xl border border-line shadow-soft">
             <Image
               src="/images/donate-hero.jpg"
               alt="A group of volunteers stacking their hands together"
               fill
               priority
               sizes="(min-width: 1024px) 480px, 100vw"
-              className="object-cover"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
           </Reveal>
         </Container>
@@ -95,9 +95,9 @@ export default function DonatePage() {
           <div className="flex flex-col gap-4 sm:flex-row lg:flex-col">
             <a
               href={`tel:${site.contact.phonesRaw[0]}`}
-              className="flex items-center gap-4 rounded-2xl bg-paper/10 p-5 transition-colors hover:bg-paper/15"
+              className="group flex items-center gap-4 rounded-2xl bg-paper/10 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:bg-paper/15"
             >
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-paper text-forest">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-paper text-forest transition-transform duration-300 group-hover:scale-110">
                 <Icon name="Phone" className="size-5" />
               </span>
               <span>
@@ -109,9 +109,9 @@ export default function DonatePage() {
               href={`mailto:${site.contact.email}?subject=${encodeURIComponent(
                 "Bank transfer details for a donation"
               )}`}
-              className="flex items-center gap-4 rounded-2xl bg-paper/10 p-5 transition-colors hover:bg-paper/15"
+              className="group flex items-center gap-4 rounded-2xl bg-paper/10 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:bg-paper/15"
             >
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-paper text-forest">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-paper text-forest transition-transform duration-300 group-hover:scale-110">
                 <Icon name="Mail" className="size-5" />
               </span>
               <span>

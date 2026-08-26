@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
@@ -23,21 +23,29 @@ function NavItem({ item, pathname }) {
           aria-expanded={open}
         >
           {item.label}
-          <Icon name="ChevronDown" className="size-3.5" />
+          <Icon
+            name="ChevronDown"
+            className={clsx("size-3.5 transition-transform duration-300", open && "rotate-180")}
+          />
         </button>
-        {open && (
-          <div className="absolute left-0 top-full min-w-56 rounded-xl border border-line bg-paper py-2 shadow-lift">
-            {item.items.map((sub) => (
-              <Link
-                key={sub.href}
-                href={sub.href}
-                className="block px-4 py-2 text-sm text-ink-soft hover:bg-surface hover:text-terracotta"
-              >
-                {sub.label}
-              </Link>
-            ))}
-          </div>
-        )}
+        <div
+          className={clsx(
+            "absolute left-0 top-full min-w-56 origin-top rounded-xl border border-line bg-paper py-2 shadow-lift transition-all duration-200 ease-out",
+            open
+              ? "translate-y-0 scale-100 opacity-100"
+              : "pointer-events-none -translate-y-1 scale-95 opacity-0"
+          )}
+        >
+          {item.items.map((sub) => (
+            <Link
+              key={sub.href}
+              href={sub.href}
+              className="block px-4 py-2 text-sm text-ink-soft transition-colors hover:bg-surface hover:text-terracotta"
+            >
+              {sub.label}
+            </Link>
+          ))}
+        </div>
       </div>
     );
   }
@@ -47,8 +55,9 @@ function NavItem({ item, pathname }) {
   return (
     <Link
       href={item.href}
+      data-active={active}
       className={clsx(
-        "py-2 text-sm font-medium transition-colors hover:text-terracotta",
+        "link-underline py-2 text-sm font-medium transition-colors hover:text-terracotta",
         active ? "text-terracotta" : "text-ink-soft"
       )}
     >
@@ -59,13 +68,28 @@ function NavItem({ item, pathname }) {
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 8);
+    }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-paper/90 backdrop-blur">
+    <header
+      className={clsx(
+        "sticky top-0 z-50 border-b bg-paper/90 backdrop-blur transition-shadow duration-300",
+        scrolled ? "border-line shadow-soft" : "border-transparent"
+      )}
+    >
       <Container className="flex h-20 items-center justify-between">
-        <Link href="/" className="flex items-center gap-3" onClick={() => setMobileOpen(false)}>
-          <span className="flex size-10 items-center justify-center rounded-full bg-forest text-paper">
+        <Link href="/" className="group flex items-center gap-3" onClick={() => setMobileOpen(false)}>
+          <span className="flex size-10 items-center justify-center rounded-full bg-forest text-paper transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105">
             <Icon name="Heart" className="size-5" strokeWidth={2} />
           </span>
           <span className="flex flex-col leading-none">
@@ -85,18 +109,22 @@ export default function Header() {
         <div className="hidden lg:block">
           <Link
             href="/donate"
-            className="inline-flex items-center gap-2 rounded-full bg-terracotta px-5 py-2.5 text-sm font-semibold text-paper transition-colors hover:bg-terracotta-dark"
+            className="btn-shine inline-flex items-center gap-2 rounded-full bg-terracotta px-5 py-2.5 text-sm font-semibold text-paper transition-all duration-300 hover:scale-[1.04] hover:bg-terracotta-dark"
           >
             Donate Now
           </Link>
         </div>
 
         <button
-          className="flex size-10 items-center justify-center rounded-full border border-line lg:hidden"
+          className="flex size-10 items-center justify-center rounded-full border border-line transition-colors hover:border-terracotta lg:hidden"
           onClick={() => setMobileOpen((v) => !v)}
           aria-label="Toggle menu"
         >
-          <Icon name={mobileOpen ? "X" : "Menu"} className="size-5" />
+          <Icon
+            name={mobileOpen ? "X" : "Menu"}
+            className="size-5 transition-transform duration-300"
+            key={mobileOpen ? "close" : "open"}
+          />
         </button>
       </Container>
 

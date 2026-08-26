@@ -10,8 +10,8 @@ export default function Footer() {
     <footer className="border-t border-line bg-forest text-forest-light">
       <Container className="grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <Link href="/" className="flex items-center gap-3">
-            <span className="flex size-10 items-center justify-center rounded-full bg-paper text-forest">
+          <Link href="/" className="group flex items-center gap-3">
+            <span className="flex size-10 items-center justify-center rounded-full bg-paper text-forest transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105">
               <Icon name="Heart" className="size-5" strokeWidth={2} />
             </span>
             <span className="font-display text-lg font-medium text-paper">
@@ -36,7 +36,7 @@ export default function Footer() {
               <li key={p.slug}>
                 <Link
                   href={`/programs/${p.slug}`}
-                  className="text-sm text-forest-light/80 transition-colors hover:text-paper"
+                  className="link-underline text-sm text-forest-light/80 transition-colors hover:text-paper"
                 >
                   {p.title}
                 </Link>
@@ -52,7 +52,7 @@ export default function Footer() {
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  className="text-sm text-forest-light/80 transition-colors hover:text-paper"
+                  className="link-underline text-sm text-forest-light/80 transition-colors hover:text-paper"
                 >
                   {l.label}
                 </Link>
@@ -71,14 +71,20 @@ export default function Footer() {
             {site.contact.phones.map((phone, i) => (
               <li key={phone} className="flex items-center gap-2">
                 <Icon name="Phone" className="size-4 shrink-0" />
-                <a href={`tel:${site.contact.phonesRaw[i]}`} className="hover:text-paper">
+                <a
+                  href={`tel:${site.contact.phonesRaw[i]}`}
+                  className="link-underline transition-colors hover:text-paper"
+                >
                   {phone}
                 </a>
               </li>
             ))}
             <li className="flex items-center gap-2">
               <Icon name="Mail" className="size-4 shrink-0" />
-              <a href={`mailto:${site.contact.email}`} className="hover:text-paper">
+              <a
+                href={`mailto:${site.contact.email}`}
+                className="link-underline transition-colors hover:text-paper"
+              >
                 {site.contact.email}
               </a>
             </li>
@@ -91,7 +97,11 @@ export default function Footer() {
           <p>&copy; {new Date().getFullYear()} Vrushahi Foundation. All rights reserved.</p>
           <div className="flex flex-wrap gap-x-5 gap-y-2">
             {legalLinks.map((l) => (
-              <Link key={l.href} href={l.href} className="hover:text-paper">
+              <Link
+                key={l.href}
+                href={l.href}
+                className="link-underline transition-colors hover:text-paper"
+              >
                 {l.label}
               </Link>
             ))}

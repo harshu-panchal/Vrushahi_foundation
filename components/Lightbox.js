@@ -7,9 +7,19 @@ import Reveal from "./Reveal";
 
 export default function Lightbox({ images }) {
   const [index, setIndex] = useState(null);
+  const [visible, setVisible] = useState(false);
   const open = index !== null;
 
-  const close = useCallback(() => setIndex(null), []);
+  const openAt = useCallback((i) => {
+    setIndex(i);
+    requestAnimationFrame(() => requestAnimationFrame(() => setVisible(true)));
+  }, []);
+
+  const close = useCallback(() => {
+    setVisible(false);
+    setTimeout(() => setIndex(null), 250);
+  }, []);
+
   const next = useCallback(
     () => setIndex((i) => (i + 1) % images.length),
     [images.length]
@@ -45,7 +55,7 @@ export default function Lightbox({ images }) {
           >
             <button
               type="button"
-              onClick={() => setIndex(i)}
+              onClick={() => openAt(i)}
               className="block w-full"
               aria-label={`Open image: ${img.alt}`}
             >
@@ -63,20 +73,22 @@ export default function Lightbox({ images }) {
 
       {open && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/90 p-4"
+          className={`fixed inset-0 z-[100] flex items-center justify-center bg-ink/90 p-4 transition-opacity duration-[250ms] ${
+            visible ? "opacity-100" : "opacity-0"
+          }`}
           role="dialog"
           aria-modal="true"
           onClick={close}
         >
           <button
-            className="absolute right-5 top-5 flex size-11 items-center justify-center rounded-full bg-paper/10 text-paper hover:bg-paper/20"
+            className="absolute right-5 top-5 flex size-11 items-center justify-center rounded-full bg-paper/10 text-paper transition-all duration-200 hover:rotate-90 hover:bg-paper/20"
             onClick={close}
             aria-label="Close"
           >
             <Icon name="X" className="size-5" />
           </button>
           <button
-            className="absolute left-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-paper/10 text-paper hover:bg-paper/20 sm:left-6"
+            className="absolute left-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-paper/10 text-paper transition-all duration-200 hover:-translate-x-0.5 hover:bg-paper/20 sm:left-6"
             onClick={(e) => {
               e.stopPropagation();
               prev();
@@ -86,7 +98,7 @@ export default function Lightbox({ images }) {
             &larr;
           </button>
           <button
-            className="absolute right-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-paper/10 text-paper hover:bg-paper/20 sm:right-6"
+            className="absolute right-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-paper/10 text-paper transition-all duration-200 hover:translate-x-0.5 hover:bg-paper/20 sm:right-6"
             onClick={(e) => {
               e.stopPropagation();
               next();
@@ -96,7 +108,9 @@ export default function Lightbox({ images }) {
             &rarr;
           </button>
           <div
-            className="relative max-h-[80vh] w-full max-w-3xl"
+            className={`relative max-h-[80vh] w-full max-w-3xl transition-all duration-[250ms] ease-out ${
+              visible ? "scale-100 opacity-100" : "scale-95 opacity-0"
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
             <Image

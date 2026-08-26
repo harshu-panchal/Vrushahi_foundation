@@ -60,17 +60,15 @@ export default function AboutPage() {
 
       <section className="py-20 sm:py-24">
         <Container className="grid gap-12 lg:grid-cols-2">
-          <Reveal>
-            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-line shadow-soft">
-              <Image
-                src="/images/hands-together.jpg"
-                alt="Hands clasped together in a gesture of support"
-                fill
-                priority
-                sizes="(min-width: 1024px) 480px, 100vw"
-                className="object-cover"
-              />
-            </div>
+          <Reveal className="group relative aspect-[4/5] overflow-hidden rounded-2xl border border-line shadow-soft">
+            <Image
+              src="/images/hands-together.jpg"
+              alt="Hands clasped together in a gesture of support"
+              fill
+              priority
+              sizes="(min-width: 1024px) 480px, 100vw"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            />
           </Reveal>
           <div>
             <SectionHeading
@@ -78,7 +76,14 @@ export default function AboutPage() {
               title="Working among migrants, abused women, neglected children and senior citizens."
               description="We work among migrants, poor and abused women, neglected children, senior citizens, school drop-outs and Self-Help Groups — raising awareness on social, health and current issues along the way. The underprivileged don't just need resources; they need to be given a genuine opportunity, and the motivation to use it."
             />
-            <Reveal delay={0.1} className="mt-8 rounded-2xl border border-line bg-surface p-6">
+            <Reveal
+              delay={0.1}
+              className="group relative mt-8 overflow-hidden rounded-2xl border border-line bg-surface p-6 transition-colors duration-300 hover:border-terracotta/30"
+            >
+              <span
+                aria-hidden="true"
+                className="absolute left-0 top-0 h-full w-1 origin-top scale-y-0 bg-terracotta transition-transform duration-500 ease-out group-hover:scale-y-100"
+              />
               <p className="text-sm font-semibold uppercase tracking-wide text-terracotta">
                 Our vision
               </p>
@@ -97,22 +102,36 @@ export default function AboutPage() {
           <div>
             <SectionHeading eyebrow="Our mission" title="What we're working toward." />
             <ul className="mt-8 space-y-4">
-              {missionPoints.map((point) => (
-                <li key={point} className="flex gap-3 text-ink-soft">
-                  <span className="mt-2.5 size-1.5 shrink-0 rounded-full bg-terracotta" />
-                  <span className="leading-relaxed">{point}</span>
-                </li>
+              {missionPoints.map((point, i) => (
+                <Reveal
+                  as="li"
+                  key={point}
+                  delay={i * 0.05}
+                  className="group flex gap-3 text-ink-soft"
+                >
+                  <span className="mt-2.5 size-1.5 shrink-0 rounded-full bg-terracotta transition-transform duration-300 group-hover:scale-150" />
+                  <span className="leading-relaxed transition-colors group-hover:text-ink">
+                    {point}
+                  </span>
+                </Reveal>
               ))}
             </ul>
           </div>
           <div>
             <SectionHeading eyebrow="Our objectives" title="How we get there." />
             <ul className="mt-8 space-y-4">
-              {objectives.map((point) => (
-                <li key={point} className="flex gap-3 text-ink-soft">
-                  <span className="mt-2.5 size-1.5 shrink-0 rounded-full bg-forest" />
-                  <span className="leading-relaxed">{point}</span>
-                </li>
+              {objectives.map((point, i) => (
+                <Reveal
+                  as="li"
+                  key={point}
+                  delay={i * 0.05}
+                  className="group flex gap-3 text-ink-soft"
+                >
+                  <span className="mt-2.5 size-1.5 shrink-0 rounded-full bg-forest transition-transform duration-300 group-hover:scale-150" />
+                  <span className="leading-relaxed transition-colors group-hover:text-ink">
+                    {point}
+                  </span>
+                </Reveal>
               ))}
             </ul>
           </div>

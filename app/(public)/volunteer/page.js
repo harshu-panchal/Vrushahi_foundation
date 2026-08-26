@@ -55,13 +55,13 @@ export default function VolunteerPage() {
 
       <section className="py-16">
         <Container>
-          <Reveal className="relative aspect-[16/7] w-full overflow-hidden rounded-2xl border border-line shadow-lift">
+          <Reveal className="group relative aspect-[16/7] w-full overflow-hidden rounded-2xl border border-line shadow-lift">
             <Image
               src="/images/volunteer-hero.jpg"
               alt="A group of volunteers stacking their hands together in a show of teamwork"
               fill
               sizes="100vw"
-              className="object-cover"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               priority
             />
           </Reveal>
@@ -76,12 +76,12 @@ export default function VolunteerPage() {
               <Reveal
                 key={role.title}
                 delay={i * 0.06}
-                className="rounded-2xl border border-line bg-paper p-6"
+                className="group rounded-2xl border border-line bg-paper p-6 transition-all duration-300 hover:-translate-y-1 hover:border-forest/30 hover:shadow-soft"
               >
-                <span className="mb-4 inline-flex size-11 items-center justify-center rounded-full bg-forest-light text-forest">
+                <span className="mb-4 inline-flex size-11 items-center justify-center rounded-full bg-forest-light text-forest transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110">
                   <Icon name={role.icon} className="size-5" />
                 </span>
-                <h3 className="font-display text-lg font-medium text-ink">
+                <h3 className="font-display text-lg font-medium text-ink transition-colors group-hover:text-forest">
                   {role.title}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink-soft">{role.body}</p>

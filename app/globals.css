@@ -24,25 +24,166 @@
   --shadow-soft: 0 1px 2px rgba(42, 33, 24, 0.04), 0 8px 24px -12px rgba(42, 33, 24, 0.18);
   --shadow-lift: 0 2px 4px rgba(42, 33, 24, 0.06), 0 20px 40px -16px rgba(42, 33, 24, 0.28);
 
-  --animate-reveal: reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-float: float 5s ease-in-out infinite;
+  --animate-grow-y: grow-y 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-pulse-ring: pulse-ring 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-reveal-in: reveal-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-hero-in: hero-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-draw-check: draw-check 0.5s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-marquee: marquee 26s linear infinite;
+  --animate-blob: blob 14s ease-in-out infinite;
+  --animate-spin-slow: spin-slow 18s linear infinite;
+  --animate-word-in: word-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-char-in: char-in 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.15) both;
+  --animate-draw-underline: draw-underline 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-draw-underline-2: draw-underline 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-char-float: char-float 4s ease-in-out infinite;
+  --animate-line-wobble: line-wobble 3.5s ease-in-out infinite;
+  --animate-badge-in: badge-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-shimmer: shimmer-sweep 4.5s ease-in-out infinite;
+  --animate-shimmer-text: shimmer-text 3s ease-in-out infinite;
 }
 
-@keyframes reveal {
-  from {
-    opacity: 0;
-    transform: translateY(var(--reveal-y, 16px));
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes grow-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(189, 82, 32, 0.35); }
+  100% { box-shadow: 0 0 0 10px rgba(189, 82, 32, 0); }
+}
+
+@keyframes reveal-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes draw-check {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes word-in {
+  from { transform: translateY(112%) rotate(5deg); opacity: 0; }
+  to { transform: translateY(0) rotate(0deg); opacity: 1; }
+}
+
+@keyframes char-in {
+  from { transform: translateY(115%) rotate(5deg) scale(0.95); opacity: 0; }
+  to { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+}
+
+@keyframes draw-underline {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes char-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2.5px); }
+}
+
+@keyframes line-wobble {
+  0%, 100% { transform: translateY(0) scaleX(1); opacity: 0.95; }
+  50% { transform: translateY(1.5px) scaleX(1.01); opacity: 1; }
+}
+
+@keyframes badge-in {
+  from { transform: translateY(-8px) scale(0.9); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes shimmer-sweep {
+  0% { transform: translateX(-150%) skewX(-20deg); }
+  40% { transform: translateX(250%) skewX(-20deg); }
+  100% { transform: translateX(250%) skewX(-20deg); }
+}
+
+@keyframes shimmer-text {
+  0% { background-position: -150% 0; }
+  100% { background-position: 250% 0; }
+}
+
+.animate-draw-check {
+  stroke-dasharray: 1;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* transform-only (no border-radius morph) so this stays on the GPU
+   compositor instead of forcing a repaint every frame — the organic
+   shape itself is a static border-radius set on .animate-blob below. */
+@keyframes blob {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  33% { transform: rotate(8deg) scale(1.06); }
+  66% { transform: rotate(-6deg) scale(0.96); }
+}
+
+@keyframes fade-in-reduced {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-reveal {
+  /* Large-scale / peripheral decorative motion: fully off, per
+     reduced-motion intent (continuous bobbing, morphing, spinning). */
+  .animate-float,
+  .animate-pulse-ring,
+  .animate-draw-check,
+  .animate-blob,
+  .animate-char-float,
+  .animate-line-wobble,
+  .animate-spin-slow {
     animation: none;
-    opacity: 1;
-    transform: none;
+  }
+
+  /* .animate-marquee and .animate-shimmer are deliberately exempt: both
+     are constant-speed, single-direction, no zoom/parallax/flashing —
+     low-risk as continuous motion goes, and killing them makes a ticker
+     or a shine effect look broken rather than calm. .shimmer-text still
+     gets overridden below, since a frozen mid-gradient risks legibility
+     regardless of motion preference. */
+
+  .shimmer-text {
+    animation: none;
+    background-image: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    color: inherit;
+  }
+
+  /* One-shot content entrances: keep a plain fade instead of killing the
+     animation outright, so the page doesn't look inert — translate/rotate/
+     scale are dropped (the part reduced-motion actually cares about), but
+     per-element stagger (set via inline animation-delay) still applies. */
+  .animate-reveal-in,
+  .animate-hero-in,
+  .animate-word-in,
+  .animate-char-in,
+  .animate-badge-in {
+    animation-name: fade-in-reduced;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
   }
 }
 
@@ -84,6 +225,10 @@
     text-wrap: balance;
   }
 
+  .animate-blob {
+    border-radius: 42% 58% 65% 35% / 45% 45% 55% 55%;
+  }
+
   .bg-grain {
     position: relative;
     isolation: isolate;
@@ -97,4 +242,220 @@
     opacity: 0.5;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
   }
+
+  .link-underline {
+    position: relative;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1.5px;
+    transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .link-underline:hover,
+  .link-underline[data-active="true"] {
+    background-size: 100% 1.5px;
+  }
+
+  .btn-shine {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .btn-shine::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      115deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.35) 45%,
+      transparent 70%
+    );
+    transform: translateX(-120%);
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .btn-shine:hover::after {
+    transform: translateX(120%);
+  }
+
+  .bg-dots {
+    background-image: radial-gradient(circle, var(--color-ink) 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+  }
+
+  .bg-mesh {
+    background-image:
+      radial-gradient(at 12% 18%, rgba(189, 82, 32, 0.16) 0px, transparent 42%),
+      radial-gradient(at 88% 8%, rgba(217, 154, 43, 0.20) 0px, transparent 45%),
+      radial-gradient(at 80% 85%, rgba(44, 70, 54, 0.14) 0px, transparent 45%),
+      radial-gradient(at 5% 80%, rgba(189, 82, 32, 0.10) 0px, transparent 40%);
+  }
+
+  .bg-mesh-dark {
+    background-image:
+      radial-gradient(at 15% 20%, rgba(217, 154, 43, 0.22) 0px, transparent 45%),
+      radial-gradient(at 85% 15%, rgba(189, 82, 32, 0.28) 0px, transparent 50%),
+      radial-gradient(at 75% 90%, rgba(217, 154, 43, 0.16) 0px, transparent 45%);
+  }
+
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  }
+
+  /* Diagonal light band that periodically sweeps across a container.
+     Put this on a `position:relative; overflow:hidden` wrapper. */
+  .shimmer-sweep {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    transition: background-color 0.4s, border-color 0.4s, transform 0.4s, box-shadow 0.4s;
+  }
+
+  .shimmer-sweep:hover {
+    background: rgba(251, 246, 238, 0.04);
+    border-color: rgba(251, 246, 238, 0.09);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2.5px);
+  }
+
+  .shimmer-sweep::after {
+    content: "";
+    position: absolute;
+    inset: -30% -20%;
+    z-index: 1;
+    background: linear-gradient(
+      112deg,
+      transparent 35%,
+      rgba(255, 255, 255, 0.0) 41%,
+      rgba(255, 255, 255, 0.28) 46%,
+      rgba(255, 255, 255, 0.6) 50%,
+      rgba(255, 255, 255, 0.28) 54%,
+      rgba(255, 255, 255, 0.0) 59%,
+      transparent 65%
+    );
+    animation: var(--animate-shimmer);
+    animation-delay: var(--shimmer-delay, 0s);
+  }
+
+  /* Moving light-through-text shine, for headline numbers/short labels
+     over a dark background. Falls back to solid `inherit`ed colour under
+     reduced motion (see the media query above) for guaranteed legibility. */
+  .shimmer-text {
+    background-image: linear-gradient(
+      100deg,
+      rgba(251, 246, 238, 0.58) 32%,
+      #ffffff 50%,
+      rgba(251, 246, 238, 0.58) 68%
+    );
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: var(--animate-shimmer-text);
+  }
+
+  /* Book page turner effects */
+  .book-container {
+    perspective: 1500px;
+    overflow: hidden;
+  }
+
+  .book-page {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transition: transform 1.2s cubic-bezier(0.25, 1, 0.4, 1), opacity 1.2s cubic-bezier(0.25, 1, 0.4, 1);
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+  }
+
+  /* Active slate */
+  .book-page-active {
+    transform: translateX(0) scale(1) rotateY(0deg);
+    opacity: 1;
+  }
+
+  /* Dormant right stack (waiting to enter going forward) */
+  .book-page-hidden-right {
+    transform: translateX(105%) rotateY(-22deg) scale(0.97);
+    transform-origin: left center;
+    opacity: 0.1;
+  }
+
+  /* Dormant left stack (waiting to enter going backward) */
+  .book-page-hidden-left {
+    transform: translateX(-105%) rotateY(22deg) scale(0.97);
+    transform-origin: right center;
+    opacity: 0.1;
+  }
+
+  /* Exiting slides */
+  .book-page-exiting-right {
+    transform: translateX(-35%) scale(0.93) rotateY(12deg);
+    transform-origin: left center;
+    opacity: 0;
+  }
+
+  .book-page-exiting-left {
+    transform: translateX(35%) scale(0.93) rotateY(-12deg);
+    transform-origin: right center;
+    opacity: 0;
+  }
+
+  /* Overlap shadowing */
+  .page-shadow-overlay {
+    position: absolute;
+    inset: 0;
+    background: #000000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.2s cubic-bezier(0.25, 1, 0.4, 1);
+    z-index: 20;
+  }
+
+  .book-page-exiting-right .page-shadow-overlay,
+  .book-page-exiting-left .page-shadow-overlay {
+    opacity: 0.45;
+  }
+
+  /* White highlight page edge folding bend reflection */
+  .page-curl-highlight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 100%;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.14) 40%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+    z-index: 25;
+    opacity: 0;
+    transition: transform 1.2s cubic-bezier(0.25, 1, 0.4, 1), opacity 0.8s ease-in;
+  }
+
+  .book-page-hidden-right .page-curl-highlight {
+    transform: translateX(-100%);
+    opacity: 0.8;
+  }
+
+  .book-page-active .page-curl-highlight {
+    transform: translateX(700%);
+    opacity: 0;
+  }
+
+  /* Slide boundary edge shadows */
+  .book-page-shadow-left {
+    box-shadow: -15px 0 35px rgba(0, 0, 0, 0.35), -5px 0 10px rgba(0, 0, 0, 0.15);
+  }
+
+  .book-page-shadow-right {
+    box-shadow: 15px 0 35px rgba(0, 0, 0, 0.35), 5px 0 10px rgba(0, 0, 0, 0.15);
+  }
 }
+

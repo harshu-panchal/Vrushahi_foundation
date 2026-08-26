@@ -4,6 +4,7 @@ import SectionHeading from "@/components/SectionHeading";
 import Reveal from "@/components/Reveal";
 import Icon from "@/components/Icon";
 import ContactForm from "@/components/ContactForm";
+import CountUp from "@/components/CountUp";
 import { impactStats } from "@/data/site";
 
 export const metadata = {
@@ -28,10 +29,10 @@ export default function StoriesPage() {
               <Reveal
                 key={stat.label}
                 delay={i * 0.08}
-                className="rounded-2xl border border-line bg-surface p-6 text-center"
+                className="group rounded-2xl border border-line bg-surface p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-terracotta/30 hover:shadow-soft"
               >
-                <p className="font-display text-4xl font-medium text-terracotta">
-                  {stat.value}
+                <p className="font-display text-4xl font-medium tabular-nums text-terracotta">
+                  <CountUp value={stat.value} />
                 </p>
                 <p className="mt-2 text-sm leading-snug text-ink-soft">{stat.label}</p>
               </Reveal>
@@ -42,8 +43,8 @@ export default function StoriesPage() {
 
       <section className="border-y border-line bg-surface py-20 sm:py-24">
         <Container className="grid gap-12 lg:grid-cols-2">
-          <Reveal>
-            <span className="mb-4 inline-flex size-12 items-center justify-center rounded-full bg-terracotta-light text-terracotta-dark">
+          <Reveal className="group">
+            <span className="mb-4 inline-flex size-12 items-center justify-center rounded-full bg-terracotta-light text-terracotta-dark transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110">
               <Icon name="Quote" className="size-6" />
             </span>
             <h2 className="font-display text-2xl font-medium text-ink">
