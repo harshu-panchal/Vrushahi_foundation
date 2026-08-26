@@ -107,7 +107,8 @@ export default function HeroCarousel({ images }) {
               src={img.src}
               alt={img.alt}
               fill
-              priority={i === 0}
+              priority={true}
+              quality={90}
               sizes="(min-width: 1024px) 520px, 100vw"
               className={clsx(
                 "object-cover ease-out",
@@ -121,7 +122,7 @@ export default function HeroCarousel({ images }) {
 
             {/* Dark shadow overlay when this page goes under another page */}
             {!reduced && <div className="page-shadow-overlay" />}
-            
+
             {/* White sweep / shine curl edge highlight to simulate the page folding bend */}
             {!reduced && <div className="page-curl-highlight" />}
           </div>
