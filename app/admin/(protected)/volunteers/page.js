@@ -2,6 +2,7 @@ import Link from "next/link";
 import { dbConnect } from "@/lib/db/connect";
 import VolunteerSignup from "@/lib/models/VolunteerSignup";
 import StatusSelect from "@/components/admin/StatusSelect";
+import ExportLink from "@/components/admin/ExportLink";
 
 export const metadata = { title: "Volunteers — Admin" };
 
@@ -29,10 +30,15 @@ export default async function VolunteersPage({ searchParams }) {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-medium text-ink">
-        Volunteer sign-ups
-      </h1>
-      <p className="mt-1 text-sm text-ink-soft">{total} total sign-ups</p>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="font-display text-2xl font-medium text-ink">
+            Volunteer sign-ups
+          </h1>
+          <p className="mt-1 text-sm text-ink-soft">{total} total sign-ups</p>
+        </div>
+        <ExportLink resource="volunteers" query={status ? { status } : {}} />
+      </div>
 
       <div className="mt-6 flex flex-wrap gap-2">
         <Link

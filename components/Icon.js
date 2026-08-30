@@ -19,6 +19,14 @@ import {
   Users,
   ShieldCheck,
   Landmark,
+  Wallet,
+  Building2,
+  Receipt,
+  ListChecks,
+  History,
+  CalendarRange,
+  Plus,
+  Pencil,
 } from "lucide-react";
 
 const icons = {
@@ -42,6 +50,14 @@ const icons = {
   Users,
   ShieldCheck,
   Landmark,
+  Wallet,
+  Building2,
+  Receipt,
+  ListChecks,
+  History,
+  CalendarRange,
+  Plus,
+  Pencil,
 };
 
 export default function Icon({ name, className, strokeWidth = 1.75 }) {

@@ -30,6 +30,47 @@ already escapes this for you (`\$` instead of `$`) when writing to
 same way, or login will silently fail. This only applies to `.env*` files;
 values set directly in Vercel's dashboard/CLI do **not** need escaping.
 
+## Accounting module
+
+The admin panel also includes an accounting module (`/admin/accounting`) —
+chart of accounts, vouchers, parties, banks, opening balances, and the
+small reference lookups (voucher types, divisions, cost centers, etc.) —
+migrated from the legacy VF SQL Server database. Everything is manageable
+as tabular CRUD in the admin UI; the underlying collections are `FinancialYear`,
+`LookupItem`, `Ledger`, `Party`, `Bank`, `Voucher`, and `OpeningBalance`
+(see `lib/models/`).
+
+**Note:** this data model is deliberately simpler than a full double-entry
+bookkeeping engine — Mongoose/MongoDB isn't a natural fit for cascading
+ledger balances and atomic multi-row postings the way a relational database
+is. Voucher debit/credit balance is enforced at the application layer (Zod
+schema + API route), not by the database. If/when this module needs to
+handle real concurrent multi-user posting at volume, migrating it to
+Postgres (e.g. via Prisma) while leaving the donor/CRM side on MongoDB is
+worth reconsidering.
+
+### Re-running the SQL → MongoDB migration
+
+`scripts/migrate-vf-sql.mjs` pulls data from the legacy SQL Server `VF`
+database and upserts it into the Mongo collections above. It's idempotent —
+safe to re-run any time the source data changes.
+
+```bash
+node --env-file=.env scripts/migrate-vf-sql.mjs
+```
+
+Requires `sqlcmd` on PATH able to reach the source database (defaults to
+`.\SQLEXPRESS` / database `VF` — override with `VF_SQL_SERVER` /
+`VF_SQL_DATABASE` env vars) and `MONGODB_URI` set, same as the app.
+
+This first pass covers the accounting core: chart of accounts, vouchers,
+parties, banks, opening balances, financial years, and lookups. Not yet
+migrated (flagged during the original schema analysis as transient/derived
+or legacy-app cruft, not source-of-truth data): the `tbl_AC_temp_*` trial
+balance scratch tables, bank/cash day-books (`tbl_AC_book_entries` etc.),
+receipts (`tbl_AC_receipt_*` — conceptually a voucher subtype, would reuse
+the `Voucher` model), and the old app's own module/menu/security tables.
+
 ## Deploying to Vercel
 
 This repo is already linked to a Vercel project (`vrushahi-foundation`), and

@@ -13,6 +13,7 @@
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
+    "exceljs": "^4.4.0",
     "jose": "^6.2.10",
     "lucide-react": "^1.33.0",
     "mongoose": "^9.9.3",

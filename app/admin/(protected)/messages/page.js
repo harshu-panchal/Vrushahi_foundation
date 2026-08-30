@@ -2,6 +2,7 @@ import Link from "next/link";
 import { dbConnect } from "@/lib/db/connect";
 import ContactMessage from "@/lib/models/ContactMessage";
 import StatusSelect from "@/components/admin/StatusSelect";
+import ExportLink from "@/components/admin/ExportLink";
 
 export const metadata = { title: "Messages — Admin" };
 
@@ -29,8 +30,13 @@ export default async function MessagesPage({ searchParams }) {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-medium text-ink">Messages</h1>
-      <p className="mt-1 text-sm text-ink-soft">{total} total messages</p>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="font-display text-2xl font-medium text-ink">Messages</h1>
+          <p className="mt-1 text-sm text-ink-soft">{total} total messages</p>
+        </div>
+        <ExportLink resource="messages" query={status ? { status } : {}} />
+      </div>
 
       <div className="mt-6 flex flex-wrap gap-2">
         <Link

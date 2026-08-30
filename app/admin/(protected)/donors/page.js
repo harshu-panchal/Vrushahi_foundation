@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { dbConnect } from "@/lib/db/connect";
 import Donor from "@/lib/models/Donor";
+import ExportLink from "@/components/admin/ExportLink";
 
 export const metadata = { title: "Donors — Admin" };
 
@@ -36,8 +37,13 @@ export default async function DonorsPage({ searchParams }) {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-medium text-ink">Donors</h1>
-      <p className="mt-1 text-sm text-ink-soft">{total} donors on record</p>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="font-display text-2xl font-medium text-ink">Donors</h1>
+          <p className="mt-1 text-sm text-ink-soft">{total} donors on record</p>
+        </div>
+        <ExportLink resource="donors" query={q ? { q } : {}} />
+      </div>
 
       <form method="get" className="mt-6 flex gap-3">
         <input
