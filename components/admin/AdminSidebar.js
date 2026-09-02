@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
 import Icon from "@/components/Icon";
@@ -38,7 +39,13 @@ export default function AdminSidebar() {
   return (
     <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-line bg-surface">
       <div className="border-b border-line px-5 py-5">
-        <p className="font-display text-lg font-medium text-ink">Vrushahi</p>
+        <Image
+          src="/images/logo2.png"
+          alt="Vrushahi Foundation"
+          width={144}
+          height={144}
+          className="mb-2"
+        />
         <p className="text-xs uppercase tracking-wide text-ink-faint">
           Admin panel
         </p>

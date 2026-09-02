@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { site } from "@/data/site";
 import { footerLinks, legalLinks } from "@/data/nav";
 import { programs } from "@/data/programs";
@@ -10,13 +11,14 @@ export default function Footer() {
     <footer className="border-t border-line bg-forest text-forest-light">
       <Container className="grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <Link href="/" className="group flex items-center gap-3">
-            <span className="flex size-10 items-center justify-center rounded-full bg-paper text-forest transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105">
-              <Icon name="Heart" className="size-5" strokeWidth={2} />
-            </span>
-            <span className="font-display text-lg font-medium text-paper">
-              Vrushahi Foundation
-            </span>
+          <Link href="/" className="group flex items-center gap-2">
+            <Image
+              src="/images/logo2.png"
+              alt="Vrushahi Foundation"
+              width={144}
+              height={144}
+              className="transition-transform duration-300 group-hover:scale-105"
+            />
           </Link>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-forest-light/80">
             {site.tagline}

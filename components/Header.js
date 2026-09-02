@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { mainNav } from "@/data/nav";
@@ -88,10 +89,14 @@ export default function Header() {
       )}
     >
       <Container className="flex h-20 items-center justify-between">
-        <Link href="/" className="group flex items-center gap-3" onClick={() => setMobileOpen(false)}>
-          <span className="flex size-10 items-center justify-center rounded-full bg-forest text-paper transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105">
-            <Icon name="Heart" className="size-5" strokeWidth={2} />
-          </span>
+        <Link href="/" className="group flex items-center gap-2" onClick={() => setMobileOpen(false)}>
+          <Image
+            src="/images/logo1.png"
+            alt="Vrushahi Foundation"
+            width={48}
+            height={48}
+            className="transition-transform duration-300 group-hover:scale-105"
+          />
           <span className="flex flex-col leading-none">
             <span className="font-display text-lg font-medium text-ink">Vrushahi</span>
             <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-ink-faint">
