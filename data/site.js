@@ -18,7 +18,7 @@ export const site = {
   },
   contact: {
     phones: ["+91 70580 30495", "+91 87939 15336"],
-    phonesRaw: ["+917058030495", "+918793915336"],
+    phonesRaw: ["+919970907005", "+919970377005"],
     email: "info@vrushahifoundation.org",
   },
   url: "https://www.vrushahifoundation.org",
