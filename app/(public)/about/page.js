@@ -53,8 +53,8 @@ export default function AboutPage() {
   return (
     <>
       <PageHero
-        eyebrow="Our story"
-        title="We didn't start as an NGO looking for a cause. We started as social workers who already had one."
+        eyebrow="History"
+        title="A life not lived for others is not a life."
         description="Vrushahi Foundation is a non-profit registered under the Societies Registration Act, 1860, founded by a team already working in health, education, sustainability, vocational training and child development around Sangli."
       />
 
@@ -72,10 +72,20 @@ export default function AboutPage() {
           </Reveal>
           <div>
             <SectionHeading
-              eyebrow="Who we are"
+              eyebrow="Who we are ?"
               title="Working among migrants, abused women, neglected children and senior citizens."
-              description="We work among migrants, poor and abused women, neglected children, senior citizens, school drop-outs and Self-Help Groups — raising awareness on social, health and current issues along the way. The underprivileged don't just need resources; they need to be given a genuine opportunity, and the motivation to use it."
             />
+            <div className="mt-6 space-y-4 text-lg leading-relaxed text-ink-soft">
+              <p>
+                Vrushahi Foundation is a non-profit NGO established under society Registration Act, 1860 (Registration No: Maharashtra/349/2017).
+              </p>
+              <p>
+                Vrushahi Foundation was established by a team of social workers who are working in the field of health, education, sustainability, vocational training, empowering women and child development.
+              </p>
+              <p>
+                Vrushahi Foundation works among migrants, poor and abused women, neglected children, senior citizens, school drop outs, Self Help Groups, and awareness on various social, health and current issues. The underprivileged need to be given the appropriate opportunities and they need to be motivated. Vrushahi Foundation works with a view to help the poor community through various welfare activities.
+              </p>
+            </div>
             <Reveal
               delay={0.1}
               className="group relative mt-8 overflow-hidden rounded-2xl border border-line bg-surface p-6 transition-colors duration-300 hover:border-terracotta/30"

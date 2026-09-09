@@ -13,29 +13,29 @@ export const metadata = {
 
 const events = [
   {
-    icon: "Users",
-    title: "Dahi Handi celebrations",
-    body: "Every Janmashtami, around 25 volunteers take part in our Dahi Handi celebration — less a stunt than a lesson in teamwork, patience and hard-won confidence, values we try to carry into every other programme.",
+    icon: "Heart",
+    title: "Entertainment & Festivals",
+    body: "Entertainment is an activity which provides a diversion or permits people to amuse themselves in their leisure time, and may also provide fun, enjoyment and laughter. Vrushahi Foundation provides a platform to the underprivileged children during various events. Vrushahi Foundation celebrates all festivals with less fortunate children for bringing smile and motivates them in various extracurricular activities.",
   },
   {
-    icon: "Heart",
-    title: "Festivals with children",
-    body: "Major festivals throughout the year are celebrated together with children from the communities we support — often the difference between a festival being an event they hear about and one they're part of.",
+    icon: "Users",
+    title: "Dahi Handi celebrations",
+    body: "Vrushahi Foundation celebrated Dahi Handi on the occasion of Janmashtami with 25 volunteers for creating awareness on team spirit skills, patience, hard work, confidence and honesty for success.",
   },
   {
     icon: "CalendarDays",
-    title: "Children's Day",
-    body: "Every November 14th, we mark Bal Diwas with the children in our programmes — a day built around Nehru's belief that how a country treats its children says something about the country itself.",
+    title: "Children's Day (Bal Diwas)",
+    body: "Children's day, in Hindi known as 'Bal Diwas', in India falls on November 14th every year and for good reason. In India it is celebrated on Pandit Nehru's birthday as a day of fun and frolic, a celebration of childhood, children and Nehruji's love for them. Chacha Nehru as the children fondly referred to him, was fond of both children and roses. They should be carefully and lovingly nurtured, as they are the future of the nation and the citizens of tomorrow. He felt that children are the real strength of a country and the very foundation of society. As a tribute to this great man and his love for the children, his birthday is celebrated all over India as 'Children's Day'. Vrushahi Foundation celebrates Children's Day with underprivileged children.",
   },
   {
     icon: "Stethoscope",
-    title: "Health & hygiene workshops",
-    body: "We run training sessions in schools, colleges and hospitals on health and hygiene — practical, repeatable sessions rather than one-off awareness talks.",
+    title: "Training & Workshops",
+    body: "Vrushahi Foundation provides training/workshops and campaigns to schools, colleges, hospitals for awareness on better living, health and hygiene and motivating them to live a healthy life.",
   },
   {
     icon: "Landmark",
-    title: "Exhibitions & fairs",
-    body: "We take part in exhibitions and trade fairs in Mumbai, Pune and around Sangli, using them to build the partnerships and visibility that keep our programmes funded.",
+    title: "Exhibitions & Trade Fairs",
+    body: "Exhibitions and trade fairs are great places to network and forge good business relationships. Face-to-face contact with NGO's and Corporate make the wheels turn more smoothly. We can meet new prospects and find new sources of revenue. Vrushahi Foundation participates in various exhibitions held in Mumbai, Pune & Nearby Sangli location for promoting the activities conducted by the organization.",
   },
 ];
 
