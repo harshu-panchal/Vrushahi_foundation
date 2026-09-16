@@ -5,6 +5,7 @@ import Donation from "@/lib/models/Donation";
 import "@/lib/models/Donor";
 import { donationInputSchema } from "@/lib/validation/schemas";
 import { resolveDonor, recomputeDonorStats } from "@/lib/services/donorStats";
+import { assignReceiptNumber } from "@/lib/services/receipts";
 
 export async function GET(request) {
   const unauth = await requireAdmin();
@@ -76,6 +77,8 @@ export async function POST(request) {
     referenceNote: data.referenceNote || undefined,
   });
 
+  await assignReceiptNumber(donation);
+  await donation.save();
   await recomputeDonorStats(donor._id);
 
   return NextResponse.json({ donation }, { status: 201 });

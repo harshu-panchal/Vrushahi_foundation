@@ -464,3 +464,15 @@
   }
 }
 
+/* Printing a donation receipt should print only the receipt, not the rest
+   of the page (nav, hero, other sections). #donation-receipt-print is
+   portaled to a direct child of <body> (see PrintReceiptPortal) so hiding
+   every other top-level element is enough — no need to fight the layout
+   (relative/overflow-hidden sections) the receipt would otherwise sit
+   inside. */
+@media print {
+  body:has(#donation-receipt-print) > *:not(#donation-receipt-print) {
+    display: none !important;
+  }
+}
+

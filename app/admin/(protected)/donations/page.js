@@ -7,7 +7,7 @@ import Icon from "@/components/Icon";
 
 export const metadata = { title: "Donations — Admin" };
 
-const MODES = ["cash", "bank_transfer", "upi", "cheque", "other"];
+const MODES = ["cash", "bank_transfer", "upi", "cheque", "razorpay", "other"];
 const PAGE_SIZE = 25;
 
 function fieldClass() {
@@ -16,7 +16,7 @@ function fieldClass() {
 
 export default async function DonationsPage({ searchParams }) {
   const params = await searchParams;
-  const { from, to, program, mode } = params;
+  const { from, to, program, mode, status } = params;
   const page = Math.max(1, Number(params.page) || 1);
 
   await dbConnect();
@@ -29,6 +29,7 @@ export default async function DonationsPage({ searchParams }) {
   }
   if (program) filter.program = program;
   if (mode) filter.mode = mode;
+  if (status) filter.status = status;
 
   const [donations, total] = await Promise.all([
     Donation.find(filter)
@@ -114,13 +115,24 @@ export default async function DonationsPage({ searchParams }) {
             ))}
           </select>
         </div>
+        <div>
+          <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-ink-faint">
+            Status
+          </label>
+          <select name="status" defaultValue={status || ""} className={fieldClass()}>
+            <option value="">All statuses</option>
+            <option value="paid">Paid</option>
+            <option value="pending">Pending</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
         <button
           type="submit"
           className="rounded-lg bg-forest px-4 py-2 text-sm font-semibold text-paper"
         >
           Filter
         </button>
-        {(from || to || program || mode) && (
+        {(from || to || program || mode || status) && (
           <Link href="/admin/donations" className="text-sm text-ink-faint underline">
             Clear
           </Link>
@@ -135,6 +147,8 @@ export default async function DonationsPage({ searchParams }) {
               <th className="px-4 py-3">Donor</th>
               <th className="px-4 py-3">Programme</th>
               <th className="px-4 py-3">Mode</th>
+              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3">Allocation</th>
               <th className="px-4 py-3 text-right">Amount</th>
               <th className="px-4 py-3" />
             </tr>
@@ -153,23 +167,68 @@ export default async function DonationsPage({ searchParams }) {
                 </td>
                 <td className="px-4 py-3 capitalize text-ink-soft">
                   {d.mode.replace("_", " ")}
+                  {d.source === "online" && (
+                    <span className="ml-1.5 rounded-full bg-forest/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-forest">
+                      Online
+                    </span>
+                  )}
+                </td>
+                <td className="px-4 py-3">
+                  <span
+                    className={
+                      "rounded-full px-2 py-0.5 text-xs font-semibold capitalize " +
+                      (d.status === "paid"
+                        ? "bg-forest/10 text-forest"
+                        : d.status === "pending"
+                        ? "bg-marigold-light text-ink-soft"
+                        : "bg-terracotta/10 text-terracotta-dark")
+                    }
+                  >
+                    {d.status}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-ink-soft">
+                  {d.allocation?.program ? (
+                    <span>
+                      <span className="font-medium text-ink capitalize">
+                        {d.allocation.program.replace(/-/g, " ")}
+                      </span>
+                      {d.allocation.date && (
+                        <span className="block text-xs text-ink-faint">
+                          {new Date(d.allocation.date).toLocaleDateString("en-IN")}
+                        </span>
+                      )}
+                    </span>
+                  ) : (
+                    <span className="text-xs italic text-ink-faint">Unassigned</span>
+                  )}
                 </td>
                 <td className="px-4 py-3 text-right font-medium text-ink">
                   ₹{d.amount.toLocaleString("en-IN")}
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <Link
-                    href={`/admin/donations/${d._id}`}
-                    className="text-xs font-semibold text-terracotta"
-                  >
-                    View
-                  </Link>
+                  <div className="flex items-center justify-end gap-3">
+                    {d.status === "paid" && (
+                      <Link
+                        href={`/admin/donations/${d._id}/allocate`}
+                        className="text-xs font-semibold text-forest"
+                      >
+                        {d.allocation?.program ? "Reassign" : "Assign"}
+                      </Link>
+                    )}
+                    <Link
+                      href={`/admin/donations/${d._id}`}
+                      className="text-xs font-semibold text-terracotta"
+                    >
+                      View
+                    </Link>
+                  </div>
                 </td>
               </tr>
             ))}
             {donations.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-ink-faint">
+                <td colSpan={8} className="px-4 py-8 text-center text-ink-faint">
                   No donations match these filters.
                 </td>
               </tr>

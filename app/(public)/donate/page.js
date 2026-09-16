@@ -4,6 +4,7 @@ import Container from "@/components/Container";
 import SectionHeading from "@/components/SectionHeading";
 import Reveal from "@/components/Reveal";
 import Icon from "@/components/Icon";
+import DonationForm from "@/components/DonationForm";
 import { site } from "@/data/site";
 
 export const metadata = {
@@ -77,19 +78,69 @@ export default function DonatePage() {
         </Container>
       </section>
 
+      <section className="border-y border-line bg-surface py-20 sm:py-24">
+        <Container className="max-w-2xl">
+          <SectionHeading
+            eyebrow="Give online"
+            title="Donate securely online."
+          />
+          <Reveal delay={0.1} className="mt-8 rounded-2xl border border-line bg-paper p-6 shadow-soft sm:p-8">
+            <DonationForm />
+          </Reveal>
+          <p className="mt-4 text-xs text-ink-faint">
+            Payments are processed through a secure, encrypted gateway. We never
+            store your card or bank details.
+          </p>
+
+          <Reveal delay={0.15} className="mt-10 rounded-2xl border border-line bg-paper p-6 shadow-soft sm:p-8">
+            <div className="mb-5 flex items-center gap-3">
+              <span className="flex size-10 items-center justify-center rounded-full bg-terracotta-light text-terracotta-dark">
+                <Icon name="Landmark" className="size-5" />
+              </span>
+              <div>
+                <p className="font-display text-lg font-medium text-ink">
+                  Donate by Cheque, DD, RTGS, NEFT
+                </p>
+                <p className="text-sm text-ink-soft">
+                  Prefer a direct transfer? Use the account details below, then
+                  email or call us so we can confirm receipt.
+                </p>
+              </div>
+            </div>
+            <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-3 text-sm sm:grid-cols-[auto_1fr_auto_1fr]">
+              {[
+                ["Name", site.bankDetails.name],
+                ["Bank Name", site.bankDetails.bankName],
+                ["Branch", site.bankDetails.branch],
+                ["A/C No", site.bankDetails.accountNo],
+                ["IFSC", site.bankDetails.ifsc],
+                ["City", site.bankDetails.city],
+                ["State", site.bankDetails.state],
+                ["PAN No", site.bankDetails.pan],
+              ].map(([label, value]) => (
+                <div key={label} className="contents">
+                  <dt className="font-semibold text-ink-faint">{label}</dt>
+                  <dd className="text-ink">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
+        </Container>
+      </section>
+
       <section className="border-y border-line bg-forest py-20 text-paper sm:py-24">
         <Container className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <div>
             <p className="mb-3 text-sm font-semibold uppercase tracking-[0.14em] text-marigold-light">
-              Bank transfer, cheque or UPI
+              Questions about your donation?
             </p>
             <h2 className="text-balance font-display text-3xl font-medium sm:text-4xl">
-              We confirm every transfer detail directly — no account numbers posted online.
+              We&rsquo;re happy to confirm a transfer or talk through CSR giving.
             </h2>
             <p className="mt-4 max-w-lg text-forest-light/85">
-              To make sure your donation reaches the right account without error, call
-              or email us and our team will share current, verified bank transfer or
-              cheque details along with a receipt process.
+              Call or email us any time — our team will confirm receipt of a
+              bank transfer, send an acknowledgement, or help set up a
+              corporate partnership.
             </p>
           </div>
           <div className="flex flex-col gap-4 sm:flex-row lg:flex-col">
@@ -152,11 +203,6 @@ export default function DonatePage() {
               <p className="mt-1 text-ink">{site.registration.incorporated}</p>
             </div>
           </Reveal>
-          <p className="mt-6 text-sm text-ink-faint">
-            An online payment gateway isn&apos;t live on this site yet — we&apos;d
-            rather confirm every donation personally while we get that set up
-            properly.
-          </p>
         </Container>
       </section>
     </>

@@ -20,6 +20,7 @@ export const mainNav = [
   { href: "/events", label: "Events" },
   { href: "/gallery", label: "Gallery" },
   { href: "/stories", label: "Stories" },
+  { href: "/donors", label: "Donors" },
   { href: "/volunteer", label: "Volunteer" },
   { href: "/contact", label: "Contact" },
 ];
@@ -29,6 +30,7 @@ export const footerLinks = [
   { href: "/programs", label: "Programs" },
   { href: "/events", label: "Events" },
   { href: "/gallery", label: "Gallery" },
+  { href: "/donors", label: "Donors" },
   { href: "/volunteer", label: "Volunteer" },
   { href: "/contact", label: "Contact" },
 ];

@@ -21,6 +21,16 @@ export const site = {
     phonesRaw: ["+919970907005", "+919970377005"],
     email: "info@vrushahifoundation.org",
   },
+  bankDetails: {
+    name: "Vrushahi Foundation",
+    bankName: "ICICI Bank",
+    branch: "Sangli Main Branch",
+    accountNo: "653301053722",
+    ifsc: "ICIC0006533",
+    city: "Sangli",
+    state: "Maharashtra",
+    pan: "AACAV9986H",
+  },
   url: "https://www.vrushahifoundation.org",
 };
 
