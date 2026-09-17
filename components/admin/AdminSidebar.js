@@ -10,6 +10,7 @@ const navItems = [
   { href: "/admin", label: "Dashboard", icon: "Landmark", exact: true },
   { href: "/admin/donations", label: "Donations", icon: "Heart" },
   { href: "/admin/donors", label: "Donors", icon: "Users" },
+  { href: "/admin/trustees", label: "Trustees", icon: "ShieldCheck" },
   { href: "/admin/volunteers", label: "Volunteers", icon: "HandHeart" },
   { href: "/admin/messages", label: "Messages", icon: "Mail" },
   { href: "/admin/reports", label: "Reports", icon: "CalendarDays" },
