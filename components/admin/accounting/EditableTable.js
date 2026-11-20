@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Icon from "@/components/Icon";
+import Icon, { ICON_NAMES } from "@/components/Icon";
+import ImageField from "@/components/admin/ImageField";
 
 function emptyDraft(columns) {
   const draft = {};
@@ -14,6 +15,35 @@ function inputClass() {
 }
 
 function FieldInput({ column, value, onChange }) {
+  if (column.type === "textarea") {
+    return (
+      <textarea
+        rows={column.rows || 4}
+        className={inputClass()}
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    );
+  }
+  if (column.type === "image") {
+    return <ImageField value={value} onChange={onChange} label="" />;
+  }
+  if (column.type === "icon") {
+    return (
+      <select
+        className={inputClass()}
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value)}
+      >
+        <option value="">—</option>
+        {ICON_NAMES.map((name) => (
+          <option key={name} value={name}>
+            {name}
+          </option>
+        ))}
+      </select>
+    );
+  }
   if (column.type === "select") {
     return (
       <select
@@ -52,6 +82,32 @@ function FieldInput({ column, value, onChange }) {
 
 function displayValue(column, value) {
   if (value === undefined || value === null || value === "") return "—";
+  if (column.type === "image") {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element -- arbitrary admin-entered URL
+      <img
+        src={value}
+        alt=""
+        className="size-12 rounded-lg border border-line object-cover"
+      />
+    );
+  }
+  if (column.type === "icon") {
+    return (
+      <span className="flex items-center gap-2">
+        <Icon name={value} className="size-4" />
+        <span className="text-xs">{value}</span>
+      </span>
+    );
+  }
+  if (column.type === "textarea") {
+    const text = String(value);
+    return (
+      <span className="block max-w-md" title={text}>
+        {text.length > 140 ? `${text.slice(0, 140)}…` : text}
+      </span>
+    );
+  }
   if (column.type === "checkbox") return value ? "Yes" : "No";
   if (column.type === "date") return new Date(value).toLocaleDateString("en-IN");
   if (column.type === "select" && column.options) {

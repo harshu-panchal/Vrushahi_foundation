@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { site } from "@/data/site";
 import Icon from "./Icon";
 
 const fieldClass =
@@ -12,6 +11,10 @@ export default function ContactForm({
   fields = ["name", "email", "phone", "message"],
   submitLabel = "Send Message",
   endpoint,
+  // Only used by the mailto fallback for forms rendered without an endpoint
+  // (the "share your story" form); passed in because the address is now an
+  // admin-managed setting and this is a client component.
+  contactEmail,
 }) {
   const [values, setValues] = useState({});
   const [status, setStatus] = useState("idle");
@@ -30,7 +33,7 @@ export default function ContactForm({
         .filter((f) => f !== "message")
         .map((f) => `${f[0].toUpperCase() + f.slice(1)}: ${values[f] || "-"}`);
       if (values.message) bodyLines.push("", values.message);
-      const mailto = `mailto:${site.contact.email}?subject=${encodeURIComponent(
+      const mailto = `mailto:${contactEmail}?subject=${encodeURIComponent(
         subject
       )}&body=${encodeURIComponent(bodyLines.join("\n"))}`;
       window.location.href = mailto;
@@ -191,7 +194,7 @@ export default function ContactForm({
       ) : (
         <p className="text-xs text-ink-faint">
           This opens your email app with the details filled in, addressed to{" "}
-          {site.contact.email}.
+          {contactEmail}.
         </p>
       )}
     </form>

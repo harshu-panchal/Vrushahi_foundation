@@ -1,8 +1,12 @@
-import { site } from "@/data/site";
-import { programs } from "@/data/programs";
-import { legalPages } from "@/data/legal";
+import { getSettings, getPrograms, getLegalPages } from "@/lib/content/read";
 
-export default function sitemap() {
+export default async function sitemap() {
+  const [settings, programs, legalPages] = await Promise.all([
+    getSettings(),
+    getPrograms(),
+    getLegalPages(),
+  ]);
+
   const staticRoutes = [
     "",
     "/about",
@@ -21,7 +25,7 @@ export default function sitemap() {
   const legalRoutes = legalPages.map((p) => `/legal/${p.slug}`);
 
   return [...staticRoutes, ...programRoutes, ...legalRoutes].map((path) => ({
-    url: `${site.url}${path}`,
+    url: `${settings.url}${path}`,
     lastModified: new Date(),
   }));
 }

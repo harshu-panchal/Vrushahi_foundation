@@ -1,8 +1,11 @@
 import DonationForm from "@/components/admin/DonationForm";
+import { getPrograms } from "@/lib/content/read";
 
 export const metadata = { title: "Add Donation — Admin" };
 
-export default function NewDonationPage() {
+export default async function NewDonationPage() {
+  const programs = await getPrograms();
+
   return (
     <div>
       <h1 className="font-display text-2xl font-medium text-ink">
@@ -12,7 +15,7 @@ export default function NewDonationPage() {
         Search for an existing donor or enter details for a new one.
       </p>
       <div className="mt-8">
-        <DonationForm />
+        <DonationForm programs={programs} />
       </div>
     </div>
   );

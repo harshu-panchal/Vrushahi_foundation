@@ -4,6 +4,7 @@ import { dbConnect } from "@/lib/db/connect";
 import Donation from "@/lib/models/Donation";
 import "@/lib/models/Donor";
 import DonationForm from "@/components/admin/DonationForm";
+import { getPrograms } from "@/lib/content/read";
 import DeleteButton from "@/components/admin/DeleteButton";
 
 export const metadata = { title: "Edit Donation — Admin" };
@@ -17,6 +18,7 @@ export default async function EditDonationPage({ params }) {
   // Strip Mongoose-specific types (ObjectId, Date) to plain JSON before
   // passing across the server/client component boundary.
   const donation = JSON.parse(JSON.stringify(donationDoc));
+  const programs = await getPrograms();
 
   return (
     <div>
@@ -99,7 +101,7 @@ export default async function EditDonationPage({ params }) {
       </div>
 
       <div className="mt-8">
-        <DonationForm donationId={id} initial={donation} />
+        <DonationForm donationId={id} initial={donation} programs={programs} />
       </div>
     </div>
   );

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import DonorPicker from "./DonorPicker";
-import { programs } from "@/data/programs";
 
 const fieldClass =
   "w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm text-ink focus:border-terracotta focus:outline-none focus:ring-2 focus:ring-terracotta/20";
@@ -20,7 +19,7 @@ function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
 
-export default function DonationForm({ donationId, initial }) {
+export default function DonationForm({ donationId, initial, programs = [] }) {
   const router = useRouter();
   const isEdit = Boolean(donationId);
 

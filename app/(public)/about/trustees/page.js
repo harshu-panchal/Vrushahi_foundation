@@ -4,30 +4,31 @@ import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import Icon from "@/components/Icon";
 import CtaBand from "@/components/CtaBand";
-import { dbConnect } from "@/lib/db/connect";
-import Trustee from "@/lib/models/Trustee";
+import { getTrustees, getPageBlocks, ctaProps } from "@/lib/content/read";
 
-export const metadata = {
-  title: "Trustees",
-  description: "The Board of Trustees governing Vrushahi Foundation.",
-};
+export async function generateMetadata() {
+  const blocks = await getPageBlocks("trustees");
+  return {
+    title: "Trustees",
+    description: blocks.hero.description,
+  };
+}
 
-// Trustees are managed live from the admin panel — always render fresh
-// rather than baking a stale list into the static build.
-export const dynamic = "force-dynamic";
-
+// Trustees are managed from the admin panel. The page is cached and the
+// cache is invalidated on save (lib/content/revalidate.js), so it no longer
+// needs force-dynamic to stay current.
 export default async function TrusteesPage() {
-  await dbConnect();
-  const trustees = await Trustee.find({ isActive: true })
-    .sort({ order: 1, name: 1 })
-    .lean();
+  const [trustees, blocks] = await Promise.all([
+    getTrustees(),
+    getPageBlocks("trustees"),
+  ]);
 
   return (
     <>
       <PageHero
-        eyebrow="Governance"
-        title="A Board of Trustees, not a single decision-maker."
-        description="Vrushahi Foundation is governed by a Board of Trustees responsible for how the Foundation's programmes and funds are directed."
+        eyebrow={blocks.hero.eyebrow}
+        title={blocks.hero.title}
+        description={blocks.hero.description}
       />
 
       <section className="py-20 sm:py-24">
@@ -66,21 +67,20 @@ export default async function TrusteesPage() {
             </div>
           ) : (
             <Reveal className="max-w-2xl text-sm text-ink-faint">
-              We&apos;re updating this page with the current Board&apos;s
-              names, designations and photographs. Reach out via our{" "}
-              <a
+              {blocks.empty.body}{" "}
+              <Link
                 href="/contact"
                 className="link-underline font-semibold text-terracotta"
               >
-                contact page
-              </a>{" "}
-              if you need trustee details sooner.
+                Contact us
+              </Link>
+              .
             </Reveal>
           )}
         </Container>
       </section>
 
-      <CtaBand />
+      <CtaBand {...ctaProps(blocks.cta)} />
     </>
   );
 }

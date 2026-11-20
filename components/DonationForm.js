@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { programs } from "@/data/programs";
-import { site } from "@/data/site";
 import Icon from "@/components/Icon";
 import DonationReceipt from "@/components/DonationReceipt";
 import PrintReceiptPortal from "@/components/PrintReceiptPortal";
@@ -21,8 +19,11 @@ const DONATION_TYPES = [
   { value: "monthly", label: "Monthly giving" },
 ];
 
-const PRESET_AMOUNTS = [500, 1000, 2500, 5000];
-const MAX_AMOUNT = 10000000;
+// Fallbacks for the admin-managed donation limits, used if a settings
+// document somehow has no amounts saved.
+const DEFAULT_PRESETS = [500, 1000, 2500, 5000];
+const DEFAULT_MIN = 10;
+const DEFAULT_MAX = 10000000;
 
 const PHONE_RE = /^[6-9]\d{9}$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -31,7 +32,7 @@ function digitsOnly(value, maxLength) {
   return value.replace(/\D/g, "").slice(0, maxLength);
 }
 
-function validate(form) {
+function validate(form, minAmount, maxAmount) {
   const errors = {};
 
   if (!form.donorName.trim()) {
@@ -63,10 +64,10 @@ function validate(form) {
     errors.amount = "Please enter an amount.";
   } else if (Number.isNaN(amount) || amount <= 0) {
     errors.amount = "Enter a valid amount.";
-  } else if (amount < 10) {
-    errors.amount = "Minimum donation amount is ₹10.";
-  } else if (amount > MAX_AMOUNT) {
-    errors.amount = `For amounts above ₹${MAX_AMOUNT.toLocaleString("en-IN")}, please contact us directly.`;
+  } else if (amount < minAmount) {
+    errors.amount = `Minimum donation amount is ₹${minAmount.toLocaleString("en-IN")}.`;
+  } else if (amount > maxAmount) {
+    errors.amount = `For amounts above ₹${maxAmount.toLocaleString("en-IN")}, please contact us directly.`;
   }
 
   if (form.suggestion.trim().length > 1000) {
@@ -87,7 +88,14 @@ function loadRazorpayScript() {
   });
 }
 
-export default function DonationForm() {
+export default function DonationForm({ settings, programs = [] }) {
+  const orgName = settings?.name || "Vrushahi Foundation";
+  const presetAmounts = settings?.donation?.presetAmounts?.length
+    ? settings.donation.presetAmounts
+    : DEFAULT_PRESETS;
+  const minAmount = settings?.donation?.minAmount || DEFAULT_MIN;
+  const maxAmount = settings?.donation?.maxAmount || DEFAULT_MAX;
+
   const [form, setForm] = useState({
     donorName: "",
     donorEmail: "",
@@ -105,7 +113,7 @@ export default function DonationForm() {
   const [success, setSuccess] = useState(null);
   const [touched, setTouched] = useState({});
 
-  const fieldErrors = validate(form);
+  const fieldErrors = validate(form, minAmount, maxAmount);
 
   function update(key, value) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -163,8 +171,8 @@ export default function DonationForm() {
         amount: orderData.amount,
         currency: orderData.currency,
         order_id: orderData.orderId,
-        name: site.name || "Vrushahi Foundation",
-        description: "Donation to Vrushahi Foundation",
+        name: orgName,
+        description: `Donation to ${orgName}`,
         prefill: {
           name: orderData.donor?.name,
           email: orderData.donor?.email,
@@ -231,10 +239,14 @@ export default function DonationForm() {
         <DonationReceipt
           receipt={success}
           amountWords={amountInWords(success.amount)}
+          settings={settings}
+          programs={programs}
         />
         <PrintReceiptPortal
           receipt={success}
           amountWords={amountInWords(success.amount)}
+          settings={settings}
+          programs={programs}
         />
 
         <div className="mt-6 flex justify-center">
@@ -370,8 +382,8 @@ export default function DonationForm() {
           <label className={labelClass}>Amount (₹)</label>
           <input
             type="number"
-            min="10"
-            max={MAX_AMOUNT}
+            min={minAmount}
+            max={maxAmount}
             step="1"
             required
             className={errorFor("amount") ? fieldErrorClass : fieldClass}
@@ -383,7 +395,7 @@ export default function DonationForm() {
           />
           {errorFor("amount") && <p className={errorTextClass}>{fieldErrors.amount}</p>}
           <div className="mt-2 flex flex-wrap gap-2">
-            {PRESET_AMOUNTS.map((a) => (
+            {presetAmounts.map((a) => (
               <button
                 key={a}
                 type="button"

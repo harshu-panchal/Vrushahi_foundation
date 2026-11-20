@@ -5,41 +5,57 @@ import Reveal from "@/components/Reveal";
 import Icon from "@/components/Icon";
 import ContactForm from "@/components/ContactForm";
 import CountUp from "@/components/CountUp";
-import { impactStats } from "@/data/site";
+import { getContentItems, getPageBlocks, getSettings } from "@/lib/content/read";
 
-export const metadata = {
-  title: "Stories",
-  description: "Success stories and testimonials from Vrushahi Foundation's work in Sangli district.",
-};
+export async function generateMetadata() {
+  const blocks = await getPageBlocks("stories");
+  return {
+    title: "Stories",
+    description: blocks.hero.description,
+  };
+}
 
-export default function StoriesPage() {
+export default async function StoriesPage() {
+  const [impactStats, blocks, settings] = await Promise.all([
+    getContentItems("impactStat"),
+    getPageBlocks("stories"),
+    getSettings(),
+  ]);
+
   return (
     <>
       <PageHero
-        eyebrow="Stories"
-        title="We'd rather publish real stories late than invented ones on time."
-        description="This page is being built alongside our beneficiaries and partners, with their consent — not written for them in advance."
+        eyebrow={blocks.hero.eyebrow}
+        title={blocks.hero.title}
+        description={blocks.hero.description}
       />
 
-      <section className="py-20 sm:py-24">
-        <Container>
-          <SectionHeading eyebrow="What we can show today" title="The shape of our impact so far." />
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {impactStats.map((stat, i) => (
-              <Reveal
-                key={stat.label}
-                delay={i * 0.08}
-                className="group rounded-2xl border border-line bg-surface p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-terracotta/30 hover:shadow-soft"
-              >
-                <p className="font-display text-4xl font-medium tabular-nums text-terracotta">
-                  <CountUp value={stat.value} />
-                </p>
-                <p className="mt-2 text-sm leading-snug text-ink-soft">{stat.label}</p>
-              </Reveal>
-            ))}
-          </div>
-        </Container>
-      </section>
+      {impactStats.length > 0 && (
+        <section className="py-20 sm:py-24">
+          <Container>
+            <SectionHeading
+              eyebrow={blocks.stats.eyebrow}
+              title={blocks.stats.title}
+            />
+            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {impactStats.map((stat, i) => (
+                <Reveal
+                  key={stat._id || stat.title}
+                  delay={i * 0.08}
+                  className="group rounded-2xl border border-line bg-surface p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-terracotta/30 hover:shadow-soft"
+                >
+                  <p className="font-display text-4xl font-medium tabular-nums text-terracotta">
+                    <CountUp value={stat.label} />
+                  </p>
+                  <p className="mt-2 text-sm leading-snug text-ink-soft">
+                    {stat.title}
+                  </p>
+                </Reveal>
+              ))}
+            </div>
+          </Container>
+        </section>
+      )}
 
       <section className="border-y border-line bg-surface py-20 sm:py-24">
         <Container className="grid gap-12 lg:grid-cols-2">
@@ -48,28 +64,25 @@ export default function StoriesPage() {
               <Icon name="Quote" className="size-6" />
             </span>
             <h2 className="font-display text-2xl font-medium text-ink">
-              Testimonials, done properly
+              {blocks.testimonials.title}
             </h2>
             <p className="mt-3 max-w-md text-lg leading-relaxed text-ink-soft">
-              We&apos;re collecting first-hand accounts from the families, volunteers
-              and partner institutions we work with — each one published only with
-              explicit consent. If you&apos;ve worked with Vrushahi Foundation and
-              are willing to share your experience, we&apos;d like to hear it.
+              {blocks.testimonials.description}
             </p>
           </Reveal>
           <Reveal delay={0.1} className="rounded-2xl border border-line bg-paper p-8">
             <h3 className="font-display text-xl font-medium text-ink">
-              Share your story
+              {blocks.form.title}
             </h3>
             <p className="mt-2 text-sm text-ink-soft">
-              Volunteer, donor, partner or beneficiary — tell us what you&apos;d
-              like to share.
+              {blocks.form.description}
             </p>
             <div className="mt-6">
               <ContactForm
+                contactEmail={settings.contact?.email}
                 subjectPrefix="A story to share — vrushahifoundation.org"
                 fields={["name", "email", "message"]}
-                submitLabel="Share Your Story"
+                submitLabel={blocks.form.primaryLabel || "Share Your Story"}
               />
             </div>
           </Reveal>

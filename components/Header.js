@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { mainNav } from "@/data/nav";
 import Container from "./Container";
 import Icon from "./Icon";
 
@@ -67,10 +66,17 @@ function NavItem({ item, pathname }) {
   );
 }
 
-export default function Header() {
+export default function Header({ nav = [], settings }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+
+  // "Vrushahi Foundation" renders as a two-line wordmark; a one-word name
+  // just renders on the first line.
+  const wordmark = (() => {
+    const words = (settings?.name || "Vrushahi Foundation").split(" ");
+    return { lead: words[0], trail: words.slice(1).join(" ") };
+  })();
 
   useEffect(() => {
     function onScroll() {
@@ -91,22 +97,26 @@ export default function Header() {
       <Container className="flex h-20 items-center justify-between">
         <Link href="/" className="group flex items-center gap-2" onClick={() => setMobileOpen(false)}>
           <Image
-            src="/images/logo1.png"
-            alt="Vrushahi Foundation"
+            src={settings?.logoHeaderUrl || "/images/logo1.png"}
+            alt={settings?.name || "Vrushahi Foundation"}
             width={48}
             height={48}
             className="transition-transform duration-300 group-hover:scale-105"
           />
           <span className="flex flex-col leading-none">
-            <span className="font-display text-lg font-medium text-ink">Vrushahi</span>
-            <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-ink-faint">
-              Foundation
+            <span className="font-display text-lg font-medium text-ink">
+              {wordmark.lead}
             </span>
+            {wordmark.trail && (
+              <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-ink-faint">
+                {wordmark.trail}
+              </span>
+            )}
           </span>
         </Link>
 
         <nav className="hidden items-center gap-7 lg:flex">
-          {mainNav.map((item) => (
+          {nav.map((item) => (
             <NavItem key={item.label} item={item} pathname={pathname} />
           ))}
         </nav>
@@ -136,7 +146,7 @@ export default function Header() {
       {mobileOpen && (
         <div className="border-t border-line bg-paper lg:hidden">
           <Container className="flex flex-col gap-1 py-4">
-            {mainNav.map((item) =>
+            {nav.map((item) =>
               item.items ? (
                 <div key={item.label} className="py-2">
                   <p className="px-2 pb-1 text-xs font-semibold uppercase tracking-wide text-ink-faint">

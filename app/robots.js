@@ -1,8 +1,9 @@
-import { site } from "@/data/site";
+import { getSettings } from "@/lib/content/read";
 
-export default function robots() {
+export default async function robots() {
+  const settings = await getSettings();
   return {
     rules: { userAgent: "*", allow: "/" },
-    sitemap: `${site.url}/sitemap.xml`,
+    sitemap: `${settings.url}/sitemap.xml`,
   };
 }

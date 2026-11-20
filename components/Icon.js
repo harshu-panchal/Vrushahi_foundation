@@ -60,6 +60,13 @@ const icons = {
   Pencil,
 };
 
+/**
+ * The icon names an admin may choose from. Content stored in the database
+ * holds one of these strings; anything else falls back to `Heart` below, so
+ * a bad value degrades to an icon rather than a crash.
+ */
+export const ICON_NAMES = Object.keys(icons);
+
 export default function Icon({ name, className, strokeWidth = 1.75 }) {
   const Cmp = icons[name] ?? Heart;
   return <Cmp className={className} strokeWidth={strokeWidth} aria-hidden="true" />;

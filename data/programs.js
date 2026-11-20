@@ -1,3 +1,13 @@
+/**
+ * SEED + FALLBACK ONLY — not the editable source of truth.
+ *
+ * Programmes now live in MongoDB as `Program` documents and are edited at
+ * /admin/programs. `scripts/seed-content.mjs` upserts this array (mapping
+ * `stat` to the model's `statValue`/`statLabel`), and `lib/content/read.js`
+ * falls back to it only when the collection is completely empty.
+ *
+ * Editing this file does nothing on a seeded site. Use the admin panel.
+ */
 export const programs = [
   {
     slug: "education",
@@ -138,7 +148,3 @@ export const programs = [
     ],
   },
 ];
-
-export function getProgramBySlug(slug) {
-  return programs.find((p) => p.slug === slug);
-}

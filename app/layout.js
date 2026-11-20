@@ -1,6 +1,6 @@
 import { Fraunces, Work_Sans } from "next/font/google";
 import "./globals.css";
-import { site } from "@/data/site";
+import { getSettings } from "@/lib/content/read";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -18,22 +18,28 @@ export const viewport = {
   initialScale: 1,
 };
 
-export const metadata = {
-  metadataBase: new URL(site.url),
-  title: {
-    default: `${site.name} — ${site.tagline}`,
-    template: `%s — ${site.name}`,
-  },
-  description:
-    "Vrushahi Foundation is a Sangli-based NGO working in education, medical support, elder care, orphan care, women's empowerment and disaster relief across Maharashtra.",
-  openGraph: {
-    title: site.name,
-    description: site.tagline,
-    siteName: site.name,
-    locale: "en_IN",
-    type: "website",
-  },
-};
+export async function generateMetadata() {
+  const settings = await getSettings();
+  const title = settings.tagline
+    ? `${settings.name} — ${settings.tagline}`
+    : settings.name;
+
+  return {
+    metadataBase: new URL(settings.url),
+    title: {
+      default: title,
+      template: `%s — ${settings.name}`,
+    },
+    description: settings.seo?.description,
+    openGraph: {
+      title: settings.name,
+      description: settings.seo?.ogDescription || settings.tagline,
+      siteName: settings.name,
+      locale: "en_IN",
+      type: "website",
+    },
+  };
+}
 
 export default function RootLayout({ children }) {
   return (

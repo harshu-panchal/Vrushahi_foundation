@@ -4,17 +4,14 @@ import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import Icon from "@/components/Icon";
 import CtaBand from "@/components/CtaBand";
-import { dbConnect } from "@/lib/db/connect";
-import Trustee from "@/lib/models/Trustee";
+import { paragraphs } from "@/lib/content/text";
+import { getTrusteeBySlug, getPageBlocks, ctaProps } from "@/lib/content/read";
 
-// Trustees are managed live from the admin panel — always render fresh
-// rather than baking a stale profile into the static build.
-export const dynamic = "force-dynamic";
-
+// Cached, with the cache invalidated whenever a trustee is saved in the
+// admin panel — see lib/content/revalidate.js.
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  await dbConnect();
-  const trustee = await Trustee.findOne({ slug, isActive: true }).lean();
+  const trustee = await getTrusteeBySlug(slug);
   if (!trustee) return {};
   return {
     title: trustee.name,
@@ -24,14 +21,13 @@ export async function generateMetadata({ params }) {
 
 export default async function TrusteeDetailPage({ params }) {
   const { slug } = await params;
-  await dbConnect();
-  const trustee = await Trustee.findOne({ slug, isActive: true }).lean();
+  const [trustee, blocks] = await Promise.all([
+    getTrusteeBySlug(slug),
+    getPageBlocks("trustees"),
+  ]);
   if (!trustee) notFound();
 
-  const bioParagraphs = (trustee.bio || "")
-    .split(/\n\s*\n/)
-    .map((p) => p.trim())
-    .filter(Boolean);
+  const bioParagraphs = paragraphs(trustee.bio);
 
   return (
     <>
@@ -113,7 +109,7 @@ export default async function TrusteeDetailPage({ params }) {
         </Container>
       </section>
 
-      <CtaBand />
+      <CtaBand {...ctaProps(blocks.cta)} />
     </>
   );
 }

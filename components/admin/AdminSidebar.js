@@ -10,10 +10,20 @@ const navItems = [
   { href: "/admin", label: "Dashboard", icon: "Landmark", exact: true },
   { href: "/admin/donations", label: "Donations", icon: "Heart" },
   { href: "/admin/donors", label: "Donors", icon: "Users" },
-  { href: "/admin/trustees", label: "Trustees", icon: "ShieldCheck" },
   { href: "/admin/volunteers", label: "Volunteers", icon: "HandHeart" },
   { href: "/admin/messages", label: "Messages", icon: "Mail" },
   { href: "/admin/reports", label: "Reports", icon: "CalendarDays" },
+];
+
+// Everything that drives the public pages.
+const websiteNavItems = [
+  { href: "/admin/pages", label: "Page copy", icon: "Pencil" },
+  { href: "/admin/content", label: "Content lists", icon: "ListChecks" },
+  { href: "/admin/programs", label: "Programmes", icon: "BookOpen" },
+  { href: "/admin/trustees", label: "Trustees", icon: "ShieldCheck" },
+  { href: "/admin/founder", label: "Founder", icon: "Users" },
+  { href: "/admin/legal", label: "Legal pages", icon: "Receipt" },
+  { href: "/admin/settings", label: "Site settings", icon: "Building2" },
 ];
 
 const accountingNavItems = [
@@ -27,7 +37,36 @@ const accountingNavItems = [
   { href: "/admin/accounting/lookups", label: "Lookups", icon: "ListChecks" },
 ];
 
-export default function AdminSidebar() {
+function SectionLabel({ children }) {
+  return (
+    <p className="mt-4 px-3 text-xs font-semibold uppercase tracking-wide text-ink-faint">
+      {children}
+    </p>
+  );
+}
+
+function NavList({ items, pathname }) {
+  return items.map((item) => {
+    const active = item.exact
+      ? pathname === item.href
+      : pathname.startsWith(item.href);
+    return (
+      <Link
+        key={item.href}
+        href={item.href}
+        className={clsx(
+          "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+          active ? "bg-terracotta text-paper" : "text-ink-soft hover:bg-paper"
+        )}
+      >
+        <Icon name={item.icon} className="size-4" />
+        {item.label}
+      </Link>
+    );
+  });
+}
+
+export default function AdminSidebar({ logoUrl = "/images/logo2.png" }) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -41,7 +80,7 @@ export default function AdminSidebar() {
     <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-line bg-surface">
       <div className="border-b border-line px-5 py-5">
         <Image
-          src="/images/logo2.png"
+          src={logoUrl}
           alt="Vrushahi Foundation"
           width={144}
           height={144}
@@ -52,50 +91,13 @@ export default function AdminSidebar() {
         </p>
       </div>
       <nav className="flex-1 space-y-1 overflow-y-auto p-3">
-        {navItems.map((item) => {
-          const active = item.exact
-            ? pathname === item.href
-            : pathname.startsWith(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={clsx(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                active
-                  ? "bg-terracotta text-paper"
-                  : "text-ink-soft hover:bg-paper"
-              )}
-            >
-              <Icon name={item.icon} className="size-4" />
-              {item.label}
-            </Link>
-          );
-        })}
+        <NavList items={navItems} pathname={pathname} />
 
-        <p className="mt-4 px-3 text-xs font-semibold uppercase tracking-wide text-ink-faint">
-          Accounting
-        </p>
-        {accountingNavItems.map((item) => {
-          const active = item.exact
-            ? pathname === item.href
-            : pathname.startsWith(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={clsx(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                active
-                  ? "bg-terracotta text-paper"
-                  : "text-ink-soft hover:bg-paper"
-              )}
-            >
-              <Icon name={item.icon} className="size-4" />
-              {item.label}
-            </Link>
-          );
-        })}
+        <SectionLabel>Website</SectionLabel>
+        <NavList items={websiteNavItems} pathname={pathname} />
+
+        <SectionLabel>Accounting</SectionLabel>
+        <NavList items={accountingNavItems} pathname={pathname} />
       </nav>
       <div className="border-t border-line p-3">
         <button

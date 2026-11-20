@@ -15,10 +15,20 @@ import DonationReceipt from "./DonationReceipt";
  * component only ever renders after a client-side payment success, never
  * during the initial server-rendered/hydration pass.
  */
-export default function PrintReceiptPortal({ receipt, amountWords }) {
+export default function PrintReceiptPortal({
+  receipt,
+  amountWords,
+  settings,
+  programs,
+}) {
   return createPortal(
     <div id="donation-receipt-print" className="hidden print:block">
-      <DonationReceipt receipt={receipt} amountWords={amountWords} />
+      <DonationReceipt
+        receipt={receipt}
+        amountWords={amountWords}
+        settings={settings}
+        programs={programs}
+      />
     </div>,
     document.body
   );

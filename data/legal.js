@@ -1,3 +1,13 @@
+/**
+ * SEED + FALLBACK ONLY — not the editable source of truth.
+ *
+ * Legal pages now live in MongoDB as `LegalPage` documents and are edited at
+ * /admin/legal. `scripts/seed-content.mjs` upserts this array (mapping
+ * `body` to the model's `sections`), and `lib/content/read.js` falls back to
+ * it only when the collection is completely empty.
+ *
+ * Editing this file does nothing on a seeded site. Use the admin panel.
+ */
 export const legalPages = [
   {
     slug: "privacy-policy",
@@ -72,7 +82,3 @@ export const legalPages = [
     ],
   },
 ];
-
-export function getLegalBySlug(slug) {
-  return legalPages.find((p) => p.slug === slug);
-}

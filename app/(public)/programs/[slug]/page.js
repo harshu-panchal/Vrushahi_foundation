@@ -7,15 +7,33 @@ import Icon from "@/components/Icon";
 import CtaBand from "@/components/CtaBand";
 import ProgramCard from "@/components/ProgramCard";
 import CountUp from "@/components/CountUp";
-import { programs, getProgramBySlug } from "@/data/programs";
+import {
+  getPrograms,
+  getProgramBySlug,
+  getPageBlocks,
+  ctaProps,
+} from "@/lib/content/read";
+import { fillPlaceholders } from "@/lib/content/text";
 
-export function generateStaticParams() {
-  return programs.map((p) => ({ slug: p.slug }));
+/**
+ * Prebuilds the programmes that exist at build time. Programmes added later
+ * still work — `dynamicParams` defaults to true, so an unknown slug renders
+ * on demand. The try/catch keeps a build working when the database is
+ * unreachable (e.g. a CI build with no MONGODB_URI): every programme page is
+ * then rendered on request instead of failing the build.
+ */
+export async function generateStaticParams() {
+  try {
+    const programs = await getPrograms();
+    return programs.map((p) => ({ slug: p.slug }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const program = getProgramBySlug(slug);
+  const program = await getProgramBySlug(slug);
   if (!program) return {};
   return {
     title: program.title,
@@ -25,10 +43,18 @@ export async function generateMetadata({ params }) {
 
 export default async function ProgramPage({ params }) {
   const { slug } = await params;
-  const program = getProgramBySlug(slug);
+  const [program, programs, blocks] = await Promise.all([
+    getProgramBySlug(slug),
+    getPrograms(),
+    getPageBlocks("programs"),
+  ]);
   if (!program) notFound();
 
   const others = programs.filter((p) => p.slug !== program.slug).slice(0, 3);
+  const cta = ctaProps(blocks.detailCta);
+  cta.title = fillPlaceholders(cta.title, {
+    program: program.title.toLowerCase(),
+  });
 
   return (
     <>
@@ -53,23 +79,32 @@ export default async function ProgramPage({ params }) {
             <p className="mt-5 max-w-xl text-balance text-lg leading-relaxed text-ink-soft">
               {program.short}
             </p>
-            <div className="mt-8 inline-flex items-baseline gap-2 rounded-2xl border border-line bg-paper px-5 py-4">
-              <span className="font-display text-3xl font-medium tabular-nums text-terracotta">
-                <CountUp value={program.stat.value} />
-              </span>
-              <span className="text-sm text-ink-soft">{program.stat.label}</span>
-            </div>
+            {program.stat?.value && (
+              <div className="mt-8 inline-flex items-baseline gap-2 rounded-2xl border border-line bg-paper px-5 py-4">
+                <span className="font-display text-3xl font-medium tabular-nums text-terracotta">
+                  <CountUp value={program.stat.value} />
+                </span>
+                <span className="text-sm text-ink-soft">
+                  {program.stat.label}
+                </span>
+              </div>
+            )}
           </Reveal>
-          <Reveal delay={0.12} className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-line shadow-lift">
-            <Image
-              src={program.image}
-              alt={program.imageAlt}
-              fill
-              sizes="(min-width: 1024px) 560px, 100vw"
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              priority
-            />
-          </Reveal>
+          {program.image && (
+            <Reveal
+              delay={0.12}
+              className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-line shadow-lift"
+            >
+              <Image
+                src={program.image}
+                alt={program.imageAlt || ""}
+                fill
+                sizes="(min-width: 1024px) 560px, 100vw"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                priority
+              />
+            </Reveal>
+          )}
         </Container>
       </section>
 
@@ -88,23 +123,22 @@ export default async function ProgramPage({ params }) {
         </Container>
       </section>
 
-      <section className="border-t border-line bg-surface py-20 sm:py-24">
-        <Container>
-          <h2 className="font-display text-2xl font-medium text-ink">
-            Other programmes
-          </h2>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {others.map((p, i) => (
-              <ProgramCard key={p.slug} program={p} delay={i * 0.06} />
-            ))}
-          </div>
-        </Container>
-      </section>
+      {others.length > 0 && (
+        <section className="border-t border-line bg-surface py-20 sm:py-24">
+          <Container>
+            <h2 className="font-display text-2xl font-medium text-ink">
+              {blocks.detailOthers.title}
+            </h2>
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {others.map((p, i) => (
+                <ProgramCard key={p.slug} program={p} delay={i * 0.06} />
+              ))}
+            </div>
+          </Container>
+        </section>
+      )}
 
-      <CtaBand
-        title={`Help us do more for ${program.title.toLowerCase()}.`}
-        description="Every donation to this programme goes directly toward the activities described above."
-      />
+      <CtaBand {...cta} />
     </>
   );
 }

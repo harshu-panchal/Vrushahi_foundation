@@ -3,6 +3,7 @@ import { dbConnect } from "@/lib/db/connect";
 import Donation from "@/lib/models/Donation";
 import "@/lib/models/Donor";
 import AllocateDonationForm from "@/components/admin/AllocateDonationForm";
+import { getPrograms } from "@/lib/content/read";
 
 export const metadata = { title: "Allocate Donation — Admin" };
 
@@ -13,6 +14,7 @@ export default async function AllocateDonationPage({ params }) {
   const donationDoc = await Donation.findById(id).populate("donor").lean();
   if (!donationDoc) notFound();
   const donation = JSON.parse(JSON.stringify(donationDoc));
+  const programs = await getPrograms();
 
   return (
     <div>
@@ -25,7 +27,11 @@ export default async function AllocateDonationPage({ params }) {
         this amount was put to use.
       </p>
       <div className="mt-8">
-        <AllocateDonationForm donationId={id} initial={donation.allocation} />
+        <AllocateDonationForm
+          donationId={id}
+          initial={donation.allocation}
+          programs={programs}
+        />
       </div>
     </div>
   );

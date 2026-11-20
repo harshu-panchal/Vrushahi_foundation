@@ -1,3 +1,13 @@
+/**
+ * SEED + FALLBACK ONLY — not the editable source of truth.
+ *
+ * These values now live in MongoDB as the `Setting` singleton and are edited
+ * at /admin/settings. `scripts/seed-content.mjs` upserts this object, and
+ * `lib/content/read.js` falls back to it if that document is missing, so the
+ * site never renders without an organisation name or contact details.
+ *
+ * Editing this file does nothing on a seeded site. Use the admin panel.
+ */
 export const site = {
   name: "Vrushahi Foundation",
   shortName: "Vrushahi",
@@ -32,11 +42,23 @@ export const site = {
     pan: "AACAV9986H",
   },
   url: "https://www.vrushahifoundation.org",
+
+  seo: {
+    description:
+      "Vrushahi Foundation is a Sangli-based NGO working in education, medical support, elder care, orphan care, women's empowerment and disaster relief across Maharashtra.",
+    ogDescription: "A life not lived for others is not a life.",
+  },
+
+  donation: {
+    presetAmounts: [500, 1000, 2500, 5000],
+    minAmount: 10,
+    maxAmount: 10000000,
+  },
+
+  logoHeaderUrl: "/images/logo1.png",
+  logoFooterUrl: "/images/logo2.png",
 };
 
-export const impactStats = [
-  { value: "25", label: "Senior citizens supported daily", icon: "HandHeart" },
-  { value: "300", label: "Children cared for at our partner children's home", icon: "Home" },
-  { value: "100", label: "Families aided after the Jammu & Kashmir calamity", icon: "LifeBuoy" },
-  { value: "2017", label: "Registered as a society in Maharashtra", icon: "ShieldCheck" },
-];
+// `impactStats` moved to data/content.js (seeded as ContentItem category
+// "impactStat") so the stat tiles can be added to and reordered in the
+// admin panel like every other list on the site.

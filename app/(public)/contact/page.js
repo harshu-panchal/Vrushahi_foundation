@@ -3,41 +3,52 @@ import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import Icon from "@/components/Icon";
 import ContactForm from "@/components/ContactForm";
-import { site } from "@/data/site";
+import { getSettings, getPageBlocks } from "@/lib/content/read";
 
-export const metadata = {
-  title: "Contact",
-  description: "Get in touch with Vrushahi Foundation.",
-};
+export async function generateMetadata() {
+  const blocks = await getPageBlocks("contact");
+  return {
+    title: "Contact",
+    description: blocks.hero.description,
+  };
+}
 
-const details = [
-  {
-    icon: "Phone",
-    label: "Phone",
-    lines: site.contact.phones,
-    hrefs: site.contact.phonesRaw.map((p) => `tel:${p}`),
-  },
-  {
-    icon: "Mail",
-    label: "Email",
-    lines: [site.contact.email],
-    hrefs: [`mailto:${site.contact.email}`],
-  },
-  {
-    icon: "MapPin",
-    label: "Location",
-    lines: [site.location.line],
-    hrefs: [null],
-  },
-];
+export default async function ContactPage() {
+  const [settings, blocks] = await Promise.all([
+    getSettings(),
+    getPageBlocks("contact"),
+  ]);
 
-export default function ContactPage() {
+  const phones = settings.contact?.phones || [];
+  const phonesRaw = settings.contact?.phonesRaw || [];
+
+  const details = [
+    phones.length > 0 && {
+      icon: "Phone",
+      label: "Phone",
+      lines: phones,
+      hrefs: phones.map((p, i) => `tel:${phonesRaw[i] || p}`),
+    },
+    settings.contact?.email && {
+      icon: "Mail",
+      label: "Email",
+      lines: [settings.contact.email],
+      hrefs: [`mailto:${settings.contact.email}`],
+    },
+    settings.location?.line && {
+      icon: "MapPin",
+      label: "Location",
+      lines: [settings.location.line],
+      hrefs: [null],
+    },
+  ].filter(Boolean);
+
   return (
     <>
       <PageHero
-        eyebrow="Contact"
-        title="Questions, partnerships, press — reach us directly."
-        description="No call centre, no ticket queue — messages go to the team running these programmes."
+        eyebrow={blocks.hero.eyebrow}
+        title={blocks.hero.title}
+        description={blocks.hero.description}
       />
 
       <section className="py-20 sm:py-24">
@@ -78,13 +89,17 @@ export default function ContactPage() {
 
           <Reveal delay={0.15} className="rounded-2xl border border-line bg-paper p-8">
             <h2 className="font-display text-xl font-medium text-ink">
-              Send us a message
+              {blocks.form.title}
             </h2>
             <p className="mt-2 text-sm text-ink-soft">
-              We&apos;ll get back to you at the email or phone number you provide.
+              {blocks.form.description}
             </p>
             <div className="mt-6">
-              <ContactForm endpoint="/api/contact-messages" />
+              <ContactForm
+                endpoint="/api/contact-messages"
+                contactEmail={settings.contact?.email}
+                submitLabel={blocks.form.primaryLabel || "Send Message"}
+              />
             </div>
           </Reveal>
         </Container>

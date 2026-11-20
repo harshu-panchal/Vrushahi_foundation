@@ -2,7 +2,7 @@ import Link from "next/link";
 import { dbConnect } from "@/lib/db/connect";
 import Donation from "@/lib/models/Donation";
 import "@/lib/models/Donor";
-import { programs } from "@/data/programs";
+import { getPrograms } from "@/lib/content/read";
 import Icon from "@/components/Icon";
 
 export const metadata = { title: "Donations — Admin" };
@@ -31,7 +31,7 @@ export default async function DonationsPage({ searchParams }) {
   if (mode) filter.mode = mode;
   if (status) filter.status = status;
 
-  const [donations, total] = await Promise.all([
+  const [donations, total, programs] = await Promise.all([
     Donation.find(filter)
       .populate("donor", "name email phone")
       .sort({ date: -1 })
@@ -39,6 +39,7 @@ export default async function DonationsPage({ searchParams }) {
       .limit(PAGE_SIZE)
       .lean(),
     Donation.countDocuments(filter),
+    getPrograms(),
   ]);
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));

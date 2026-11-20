@@ -7,15 +7,16 @@ import Icon from "@/components/Icon";
 import { dbConnect } from "@/lib/db/connect";
 import Donation from "@/lib/models/Donation";
 import "@/lib/models/Donor";
-import { programs } from "@/data/programs";
 import { programLabel } from "@/lib/utils/programLabel";
-import { site } from "@/data/site";
+import { getSettings, getPrograms, getPageBlocks } from "@/lib/content/read";
 
-export const metadata = {
-  title: "Our Donors",
-  description:
-    "Every donor who has supported Vrushahi Foundation, and the programme their contribution was put toward.",
-};
+export async function generateMetadata() {
+  const blocks = await getPageBlocks("donors");
+  return {
+    title: "Our Donors",
+    description: blocks.hero.description,
+  };
+}
 
 const PAGE_SIZE = 25;
 
@@ -27,6 +28,12 @@ export default async function DonorsPage({ searchParams }) {
   const params = await searchParams;
   const program = params.program || "";
   const page = Math.max(1, Number(params.page) || 1);
+
+  const [settings, programs, blocks] = await Promise.all([
+    getSettings(),
+    getPrograms(),
+    getPageBlocks("donors"),
+  ]);
 
   await dbConnect();
 
@@ -76,9 +83,9 @@ export default async function DonorsPage({ searchParams }) {
   return (
     <>
       <PageHero
-        eyebrow="Transparency"
-        title="Our Donors"
-        description="Every gift, acknowledged — and the programme it was put toward once we allocated it."
+        eyebrow={blocks.hero.eyebrow}
+        title={blocks.hero.title}
+        description={blocks.hero.description}
       />
 
       <section className="py-16 sm:py-20">
@@ -106,8 +113,8 @@ export default async function DonorsPage({ searchParams }) {
         <section className="border-y border-line bg-surface py-16 sm:py-20">
           <Container className="max-w-3xl">
             <SectionHeading
-              eyebrow="Where it went"
-              title="Contributions by programme."
+              eyebrow={blocks.byProgram.eyebrow}
+              title={blocks.byProgram.title}
             />
             <div className="mt-8 space-y-3">
               {byProgram.map((p) => {
@@ -115,7 +122,7 @@ export default async function DonorsPage({ searchParams }) {
                 return (
                   <div key={p._id || "general"}>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="font-medium text-ink">{programLabel(p._id)}</span>
+                      <span className="font-medium text-ink">{programLabel(p._id, programs)}</span>
                       <span className="text-ink-soft">
                         ₹{p.amount.toLocaleString("en-IN")} &middot; {pct}%
                       </span>
@@ -137,7 +144,10 @@ export default async function DonorsPage({ searchParams }) {
       <section className="py-16 sm:py-20">
         <Container>
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <SectionHeading eyebrow="Donor list" title="Thank you, all of you." />
+            <SectionHeading
+              eyebrow={blocks.list.eyebrow}
+              title={blocks.list.title}
+            />
             <form method="get" className="flex items-end gap-3">
               <div>
                 <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-ink-faint">
@@ -191,7 +201,7 @@ export default async function DonorsPage({ searchParams }) {
                       {d.donor?.name || "Anonymous"}
                     </td>
                     <td className="px-4 py-3 text-ink-soft">
-                      {programLabel(purposeOf(d))}
+                      {programLabel(purposeOf(d), programs)}
                       {!d.allocation?.program && (
                         <span className="ml-1.5 rounded-full bg-marigold-light px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink-soft">
                           Pending allocation
@@ -237,12 +247,13 @@ export default async function DonorsPage({ searchParams }) {
 
           <p className="mt-8 flex items-start gap-2 text-xs text-ink-faint">
             <Icon name="ShieldCheck" className="mt-0.5 size-4 shrink-0" />
-            We list donor names and amounts as a record of transparency. If
-            you&apos;d rather your name not appear here, email us at{" "}
-            <a href={`mailto:${site.contact.email}`} className="underline">
-              {site.contact.email}
-            </a>{" "}
-            and we&apos;ll remove it.
+            {blocks.privacyNote.body}{" "}
+            <a
+              href={`mailto:${settings.contact?.email}`}
+              className="underline"
+            >
+              {settings.contact?.email}
+            </a>
           </p>
         </Container>
       </section>

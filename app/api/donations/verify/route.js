@@ -8,6 +8,7 @@ import { recomputeDonorStats } from "@/lib/services/donorStats";
 import { assignReceiptNumber } from "@/lib/services/receipts";
 import { sendMail } from "@/lib/mail/mailer";
 import { renderDonationReceiptEmail } from "@/lib/mail/donationReceipt";
+import { getSettings, getPrograms } from "@/lib/content/read";
 
 export async function POST(request) {
   const body = await request.json().catch(() => null);
@@ -50,6 +51,8 @@ export async function POST(request) {
     const { subject, html, text } = renderDonationReceiptEmail({
       donation,
       donor: { ...donor, address: donation.donorAddress },
+      settings: await getSettings(),
+      programs: await getPrograms(),
     });
     const sent = await sendMail({ to: donor.email, subject, html, text });
     if (sent) {

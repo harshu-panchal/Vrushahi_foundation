@@ -2,21 +2,28 @@ import PageHero from "@/components/PageHero";
 import Container from "@/components/Container";
 import ProgramCard from "@/components/ProgramCard";
 import CtaBand from "@/components/CtaBand";
-import { programs } from "@/data/programs";
+import { getPrograms, getPageBlocks, ctaProps } from "@/lib/content/read";
 
-export const metadata = {
-  title: "Our Programs",
-  description:
-    "Education, medical support, old-age care, orphanage support, women's empowerment and disaster relief — the six programmes Vrushahi Foundation runs across Sangli district.",
-};
+export async function generateMetadata() {
+  const blocks = await getPageBlocks("programs");
+  return {
+    title: "Our Programs",
+    description: blocks.hero.description,
+  };
+}
 
-export default function ProgramsPage() {
+export default async function ProgramsPage() {
+  const [programs, blocks] = await Promise.all([
+    getPrograms(),
+    getPageBlocks("programs"),
+  ]);
+
   return (
     <>
       <PageHero
-        eyebrow="Programs"
-        title="Six commitments, run as standing programmes."
-        description="Each of these grew out of a need our team saw directly in Sangli district — not a template borrowed from elsewhere."
+        eyebrow={blocks.hero.eyebrow}
+        title={blocks.hero.title}
+        description={blocks.hero.description}
       />
       <section className="py-20 sm:py-24">
         <Container>
@@ -27,7 +34,7 @@ export default function ProgramsPage() {
           </div>
         </Container>
       </section>
-      <CtaBand />
+      <CtaBand {...ctaProps(blocks.cta)} />
     </>
   );
 }

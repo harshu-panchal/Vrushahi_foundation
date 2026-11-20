@@ -5,10 +5,13 @@ import Trustee from "@/lib/models/Trustee";
 import { trusteeUpdateSchema } from "@/lib/validation/schemas";
 import { itemHandlers } from "@/lib/api/crudRoute";
 import { slugify } from "@/lib/utils/slugify";
+import { revalidateContent } from "@/lib/content/revalidate";
+import { CONTENT_TAGS } from "@/lib/content/tags";
 
 export const { DELETE } = itemHandlers({
   Model: Trustee,
   updateSchema: trusteeUpdateSchema,
+  cacheTag: CONTENT_TAGS.trustees,
 });
 
 export async function PATCH(request, { params }) {
@@ -39,6 +42,7 @@ export async function PATCH(request, { params }) {
       runValidators: true,
     });
     if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    revalidateContent(CONTENT_TAGS.trustees);
     return NextResponse.json({ item });
   } catch (err) {
     if (err.code === 11000) {
